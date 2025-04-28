@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,9 +21,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'phone_number',
-        'profile_picture',
-        'user_type',
+        'phone',
+        'is_fighter',
+        'is_admin',
+        'address',
+        'city',
+        'state',
+        'postal_code',
+        'country',
     ];
 
     /**
@@ -44,47 +49,72 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_fighter' => 'boolean',
+        'is_admin' => 'boolean',
     ];
 
     /**
-     * Get user's tickets
+     * Get the fighter profile associated with the user.
      */
-    public function tickets(): HasMany
+    public function fighter()
+    {
+        return $this->hasOne(Fighter::class);
+    }
+
+    /**
+     * Get the tickets purchased by the user.
+     */
+    public function tickets()
     {
         return $this->hasMany(Ticket::class);
     }
 
     /**
-     * Get user's stream access
+     * Get the payments made by the user.
      */
-    public function streamAccess(): HasMany
-    {
-        return $this->hasMany(StreamAccess::class);
-    }
-
-    /**
-     * Get user's payments
-     */
-    public function payments(): HasMany
+    public function payments()
     {
         return $this->hasMany(Payment::class);
     }
 
     /**
-     * Check if the user is an admin
+     * Get the news articles written by the user.
      */
-    public function isAdmin(): bool
+    public function newsArticles()
     {
-        return $this->user_type === 'admin';
+        return $this->hasMany(NewsArticle::class, 'author_id');
     }
 
     /**
-     * Check if user has access to a specific stream
+     * Check if the user is a fighter.
      */
-    public function hasStreamAccess(Event $event): bool
+    public function isFighter()
     {
-        return $this->streamAccess()->where('event_id', $event->id)
-                                   ->where('has_access', true)
-                                   ->exists();
+        return $this->is_fighter;
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
+    /**
+     * Check if the user has a fighter profile.
+     */
+    public function hasFighterProfile()
+    {
+        return $this->fighter()->exists();
+    }
+
+    /**
+     * Check if the user has a verified fighter profile.
+     */
+    public function hasVerifiedFighterProfile()
+    {
+        return $this->hasFighterProfile() && 
+               $this->fighter->verification_status === Fighter::VERIFICATION_STATUS_VERIFIED;
     }
 }

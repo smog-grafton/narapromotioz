@@ -4,66 +4,232 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ranking extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'fighter_id',
+        'organization',
         'weight_class',
-        'position',
-        'points',
-        'last_updated',
+        'date',
+        'notes',
+        'champion_id',
+        'fighter1_id',
+        'fighter1_previous',
+        'fighter2_id',
+        'fighter2_previous',
+        'fighter3_id',
+        'fighter3_previous',
+        'fighter4_id',
+        'fighter4_previous',
+        'fighter5_id',
+        'fighter5_previous',
+        'fighter6_id',
+        'fighter6_previous',
+        'fighter7_id',
+        'fighter7_previous',
+        'fighter8_id',
+        'fighter8_previous',
+        'fighter9_id',
+        'fighter9_previous',
+        'fighter10_id',
+        'fighter10_previous',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'position' => 'integer',
-        'points' => 'decimal:2',
-        'last_updated' => 'datetime',
+        'date' => 'date',
+        'fighter1_previous' => 'integer',
+        'fighter2_previous' => 'integer',
+        'fighter3_previous' => 'integer',
+        'fighter4_previous' => 'integer',
+        'fighter5_previous' => 'integer',
+        'fighter6_previous' => 'integer',
+        'fighter7_previous' => 'integer',
+        'fighter8_previous' => 'integer',
+        'fighter9_previous' => 'integer',
+        'fighter10_previous' => 'integer',
     ];
 
     /**
-     * Get the fighter who owns this ranking
+     * Get the champion fighter
      */
-    public function fighter(): BelongsTo
+    public function champion()
     {
-        return $this->belongsTo(Fighter::class);
+        return $this->belongsTo(Fighter::class, 'champion_id');
     }
 
     /**
-     * Scope for specific weight class
+     * Get the fighter at position 1
+     */
+    public function fighter1()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter1_id');
+    }
+
+    /**
+     * Get the fighter at position 2
+     */
+    public function fighter2()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter2_id');
+    }
+
+    /**
+     * Get the fighter at position 3
+     */
+    public function fighter3()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter3_id');
+    }
+
+    /**
+     * Get the fighter at position 4
+     */
+    public function fighter4()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter4_id');
+    }
+
+    /**
+     * Get the fighter at position 5
+     */
+    public function fighter5()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter5_id');
+    }
+
+    /**
+     * Get the fighter at position 6
+     */
+    public function fighter6()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter6_id');
+    }
+
+    /**
+     * Get the fighter at position 7
+     */
+    public function fighter7()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter7_id');
+    }
+
+    /**
+     * Get the fighter at position 8
+     */
+    public function fighter8()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter8_id');
+    }
+
+    /**
+     * Get the fighter at position 9
+     */
+    public function fighter9()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter9_id');
+    }
+
+    /**
+     * Get the fighter at position 10
+     */
+    public function fighter10()
+    {
+        return $this->belongsTo(Fighter::class, 'fighter10_id');
+    }
+
+    /**
+     * Scope rankings by organization
+     */
+    public function scopeByOrganization($query, $organization)
+    {
+        return $query->where('organization', $organization);
+    }
+
+    /**
+     * Scope rankings by weight class
      */
     public function scopeByWeightClass($query, $weightClass)
     {
-        return $query->where('weight_class', $weightClass)
-                    ->orderBy('position', 'asc');
+        return $query->where('weight_class', $weightClass);
     }
 
     /**
-     * Check if the fighter is in the top 5
+     * Scope rankings with champion
      */
-    public function isTopFive(): bool
+    public function scopeWithChampion($query)
     {
-        return $this->position <= 5;
+        return $query->whereNotNull('champion_id');
     }
 
     /**
-     * Check if the fighter is the champion (position 1)
+     * Scope latest rankings
      */
-    public function isChampion(): bool
+    public function scopeLatest($query)
     {
-        return $this->position === 1;
+        return $query->orderBy('date', 'desc');
+    }
+
+    /**
+     * Get all fighters in the ranking
+     */
+    public function fighters()
+    {
+        $fighters = [];
+        
+        for ($i = 1; $i <= 10; $i++) {
+            $fighterId = "fighter{$i}_id";
+            $previousPosition = "fighter{$i}_previous";
+            
+            if ($this->$fighterId) {
+                $fighters[] = [
+                    'position' => $i,
+                    'fighter_id' => $this->$fighterId,
+                    'fighter' => $this->{"fighter{$i}"},
+                    'previous_position' => $this->$previousPosition,
+                    'movement' => $this->$previousPosition ? $this->$previousPosition - $i : 'new',
+                ];
+            }
+        }
+        
+        return $fighters;
+    }
+
+    /**
+     * Check if a fighter is in this ranking
+     */
+    public function hasFighter($fighterId)
+    {
+        for ($i = 1; $i <= 10; $i++) {
+            $currentFighterId = "fighter{$i}_id";
+            
+            if ($this->$currentFighterId == $fighterId) {
+                return true;
+            }
+        }
+        
+        return $this->champion_id == $fighterId;
+    }
+
+    /**
+     * Get a fighter's position in this ranking
+     */
+    public function getFighterPosition($fighterId)
+    {
+        for ($i = 1; $i <= 10; $i++) {
+            $currentFighterId = "fighter{$i}_id";
+            
+            if ($this->$currentFighterId == $fighterId) {
+                return $i;
+            }
+        }
+        
+        if ($this->champion_id == $fighterId) {
+            return 'champion';
+        }
+        
+        return null;
     }
 }
