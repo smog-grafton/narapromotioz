@@ -390,6 +390,105 @@ a:hover {
     animation-fill-mode: both;
 }
 
+/* Countdown Timer */
+.countdown-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    max-width: 550px;
+    margin: 0 auto;
+    animation: fadeIn 1.5s;
+}
+
+.countdown-header {
+    color: var(--sky-blue);
+    font-weight: var(--font-bold);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+}
+
+.countdown-value {
+    font-size: 2rem;
+    font-weight: var(--font-bold);
+    color: var(--white);
+    line-height: 1;
+    font-family: 'Oswald', sans-serif;
+}
+
+.countdown-label {
+    font-size: 0.8rem;
+    color: var(--light-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.countdown-event-name {
+    margin-top: 0.5rem;
+    font-weight: var(--font-medium);
+    color: var(--gold);
+}
+
+/* News Ticker */
+.news-ticker {
+    overflow: hidden;
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ticker-wrapper {
+    display: flex;
+    align-items: center;
+    color: var(--white);
+}
+
+.ticker-label {
+    background-color: var(--action-red);
+    color: white;
+    padding: 0.25rem 1rem;
+    font-weight: var(--font-bold);
+    margin-right: 1rem;
+    font-size: 0.8rem;
+    border-radius: var(--border-radius-sm);
+    white-space: nowrap;
+}
+
+.ticker-content {
+    display: flex;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+}
+
+.ticker-item {
+    padding: 0 1rem;
+    font-weight: var(--font-medium);
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
 /* Counter Section */
 .counter-item {
     padding: var(--spacing-md);
@@ -411,6 +510,73 @@ a:hover {
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* Ticket Section */
+.ticket-section {
+    background-color: var(--light-gray);
+}
+
+.ticket-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.ticket-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.ticket-card .card-img-top {
+    height: 150px;
+    object-fit: cover;
+}
+
+.ticket-date-badge {
+    background-color: var(--white);
+    border-radius: var(--border-radius-sm);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    box-shadow: var(--shadow-md);
+}
+
+.date-month {
+    font-size: 0.8rem;
+    font-weight: var(--font-bold);
+    color: var(--action-red);
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.date-day {
+    font-size: 1.5rem;
+    font-weight: var(--font-bold);
+    color: var(--dark-navy);
+    line-height: 1.2;
+}
+
+.ticket-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+}
+
+.from-text {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    margin-right: 0.5rem;
+    opacity: 0.7;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: var(--font-bold);
+    color: var(--sky-blue);
 }
 
 /* Section Titles */
@@ -477,6 +643,8 @@ a:hover {
     transition: all 0.3s ease;
     border-radius: var(--border-radius-md);
     overflow: hidden;
+    border: none;
+    box-shadow: var(--shadow-sm);
 }
 
 .news-card:hover {
@@ -487,6 +655,33 @@ a:hover {
 .news-card .card-img-top {
     height: 200px;
     object-fit: cover;
+}
+
+.news-date {
+    font-size: 0.85rem;
+}
+
+.read-more-link {
+    font-size: 0.9rem;
+    font-weight: var(--font-medium);
+    color: var(--sky-blue);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.read-more-link:hover {
+    color: var(--action-red);
+}
+
+.view-all-link {
+    font-size: 0.9rem;
+    font-weight: var(--font-medium);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.view-all-link:hover {
+    transform: translateX(5px);
 }
 
 /* Rankings */

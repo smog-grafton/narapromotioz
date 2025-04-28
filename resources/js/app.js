@@ -53,6 +53,7 @@ function initNavbarEffects() {
  * Initialize Countdown Timers
  */
 function initCountdownTimers() {
+    // Legacy countdowns
     const countdownElements = document.querySelectorAll('[data-countdown]');
     
     countdownElements.forEach(element => {
@@ -95,6 +96,90 @@ function initCountdownTimers() {
                 </div>
             `;
         }, 1000);
+    });
+    
+    // New hero countdown timer
+    const eventTimers = document.querySelectorAll('.countdown-timer[data-event-date]');
+    
+    eventTimers.forEach(timer => {
+        const targetDate = new Date(timer.dataset.eventDate).getTime();
+        const daysElem = timer.querySelector('.days');
+        const hoursElem = timer.querySelector('.hours');
+        const minutesElem = timer.querySelector('.minutes');
+        const secondsElem = timer.querySelector('.seconds');
+        
+        if (!daysElem || !hoursElem || !minutesElem || !secondsElem) return;
+        
+        // Update countdown every second
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                timer.innerHTML = '<div class="event-started">EVENT STARTED!</div>';
+                return;
+            }
+            
+            // Calculate time units
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Add leading zeros and update elements
+            daysElem.textContent = days.toString().padStart(2, '0');
+            hoursElem.textContent = hours.toString().padStart(2, '0');
+            minutesElem.textContent = minutes.toString().padStart(2, '0');
+            secondsElem.textContent = seconds.toString().padStart(2, '0');
+        }, 1000);
+    });
+    
+    // Animate counter numbers on scroll
+    initCounterAnimation();
+}
+
+/**
+ * Animate counter numbers when visible
+ */
+function initCounterAnimation() {
+    const counters = document.querySelectorAll('.counter-number[data-count]');
+    
+    if (!counters.length) return;
+    
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-count'), 10);
+                const duration = 2000; // 2 seconds
+                const startTime = Date.now();
+                const startValue = 0;
+                
+                function updateCounter() {
+                    const currentTime = Date.now();
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Easing function for smoother animation
+                    const easeOutQuad = progress * (2 - progress);
+                    const currentValue = Math.floor(startValue + (target - startValue) * easeOutQuad);
+                    
+                    counter.textContent = `${currentValue}+`;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    }
+                }
+                
+                updateCounter();
+                observer.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    counters.forEach(counter => {
+        counterObserver.observe(counter);
     });
 }
 
