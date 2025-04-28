@@ -1,0 +1,299 @@
+/* Nara Promotionz Boxing Website - Main Stylesheet */
+
+/* Brand Colors */
+:root {
+    --sky-blue: #00ADEF;
+    --action-red: #E63946;
+    --white: #FFFFFF;
+    --light-gray: #F1FAEE;
+    --dark-navy: #1D3557;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--dark-navy);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+a {
+    color: var(--sky-blue);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--dark-navy);
+}
+
+/* Button Styles */
+.btn {
+    text-transform: uppercase;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    border-radius: 0;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+}
+
+.btn-primary {
+    background-color: var(--sky-blue);
+    border-color: var(--sky-blue);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #0090cb;
+    border-color: #0090cb;
+}
+
+.btn-danger {
+    background-color: var(--action-red);
+    border-color: var(--action-red);
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    background-color: #d32535;
+    border-color: #d32535;
+}
+
+.btn-outline-primary {
+    color: var(--sky-blue);
+    border-color: var(--sky-blue);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--sky-blue);
+    color: white;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: var(--dark-navy);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+    color: var(--sky-blue);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    color: var(--sky-blue);
+    font-weight: 700;
+}
+
+/* Card Styles */
+.card {
+    border-radius: 0;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Section Styles */
+section {
+    padding: 4rem 0;
+}
+
+section h2 {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+/* Fighter Card */
+.fighter-card .card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Event Card */
+.event-card .event-date {
+    background-color: var(--action-red);
+    color: white;
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-weight: 700;
+}
+
+/* Live Badge Animation */
+.live-badge {
+    background-color: var(--action-red);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Footer Styles */
+.footer {
+    background-color: var(--dark-navy);
+    color: white;
+    padding: 4rem 0 2rem;
+}
+
+.footer h4 {
+    color: var(--sky-blue);
+    margin-bottom: 1.5rem;
+}
+
+.footer a {
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--sky-blue);
+    text-decoration: none;
+}
+
+.footer .social-icons a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.footer .social-icons a:hover {
+    background-color: var(--sky-blue);
+    color: white;
+}
+
+/* Rankings Table */
+.rankings-table th {
+    background-color: var(--dark-navy);
+    color: white;
+}
+
+.rankings-table .champion {
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* Dark Mode Styles */
+.dark-mode {
+    background-color: #121212;
+    color: #f5f5f5;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+.dark-mode .card-body, .dark-mode .card-footer {
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+}
+
+.dark-mode .bg-light {
+    background-color: #1a1a1a !important;
+}
+
+.dark-mode .table {
+    color: #f5f5f5;
+}
+
+.dark-mode .navbar {
+    background-color: #0a0a0a;
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: var(--dark-navy);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .hero-section {
+        text-align: center;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    section {
+        padding: 2rem 0;
+    }
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
