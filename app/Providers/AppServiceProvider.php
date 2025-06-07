@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
+use App\Services\TicketGenerationService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +12,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(TicketGenerationService::class, function ($app) {
+            return new TicketGenerationService();
+        });
     }
 
     /**
@@ -20,19 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share common data with all views
-        View::composer('*', function ($view) {
-            $view->with('siteTitle', 'Nara Promotionz');
-            
-            // Check if there's a live event
-            if (class_exists(\App\Models\Event::class)) {
-                try {
-                    $liveEvent = \App\Models\Event::where('is_live', true)->first();
-                    $view->with('globalLiveEvent', $liveEvent);
-                } catch (\Exception $e) {
-                    // Ignore database exceptions during initial setup
-                }
-            }
-        });
+        //
     }
 }

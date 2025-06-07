@@ -1,383 +1,550 @@
 @extends('layouts.app')
 
-@section('title', 'Boxing Events')
+@section('title', 'Boxing Events Calendar')
 
 @section('content')
-<div class="container py-5">
-    <!-- Hero Banner -->
-    <div class="position-relative mb-5">
-        <div class="bg-dark rounded" style="height: 300px; background: linear-gradient(rgba(29, 53, 87, 0.8), rgba(29, 53, 87, 0.8)), url('https://images.unsplash.com/photo-1579269097383-7fe7212c2c92') center/cover no-repeat;">
+<div class="events-listing-section">
+    <div class="bg-text">EVENTS</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <h1 class="section-title">BOXING EVENTS</h1>
+                <p class="section-subtitle">Find upcoming and past boxing events</p>
+                
+                <div class="event-tabs mt-4">
+                    <a href="#upcoming" class="event-tab active" data-tab="upcoming">UPCOMING</a>
+                    <a href="#past" class="event-tab" data-tab="past">PAST</a>
+                </div>
+            </div>
         </div>
-        <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-4">
-            <h1 class="display-4 fw-bold mb-3">BOXING EVENTS</h1>
-            <p class="lead">Experience the thrill of live boxing with Nara Promotionz.</p>
-        </div>
-    </div>
-    
-    <!-- Filter Section -->
-    <div class="row mb-4">
-        <div class="col-md-8 mb-3 mb-md-0">
-            <form action="{{ route('events.index') }}" method="GET" class="d-flex">
-                <input type="text" name="search" class="form-control me-2" placeholder="Search events..." value="{{ request('search') }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
+
+        <!-- Upcoming Events Tab Content -->
+        <div id="upcoming" class="event-tab-content active">
+            @if($upcomingEvents->isNotEmpty())
+                <div class="row">
+                    @foreach($upcomingEvents as $event)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="event-card">
+                                <div class="event-card-image">
+                                    <a href="{{ route('events.show', $event->slug) }}">
+                                        <img src="{{ $event->thumbnail }}" alt="{{ $event->name }}" class="img-fluid">
+                                    </a>
+                                    <div class="event-date">
+                                        <span class="event-day">{{ $event->event_date->format('d') }}</span>
+                                        <span class="event-month">{{ $event->event_date->format('M') }}</span>
+                                    </div>
+                                </div>
+                                <div class="event-card-content">
+                                    <h3 class="event-title">
+                                        <a href="{{ route('events.show', $event->slug) }}">{{ $event->name }}</a>
+                                    </h3>
+                                    <div class="event-meta">
+                                        <div class="meta-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>{{ $event->venue }}, {{ $event->city }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-clock"></i>
+                                            <span>{{ $event->event_time ? $event->event_time->format('g:i A') : 'TBA' }}</span>
+                                        </div>
+                                    </div>
+                                    @if($event->main_event_title)
+                                        <div class="main-event">
+                                            <h4>Main Event</h4>
+                                            <p>{{ $event->main_event_title }}</p>
+                                        </div>
+                                    @endif
+                                    <div class="event-footer">
+                                        @if($event->tickets_available)
+                                            <span class="ticket-badge">
+                                                <i class="fas fa-ticket-alt"></i> Tickets Available
+                                            </span>
+                                        @endif
+                                        @if($event->has_stream)
+                                            <span class="stream-badge">
+                                                <i class="fas fa-video"></i> Live Stream
+                                            </span>
+                                        @endif
+                                        <a href="{{ route('events.show', $event->slug) }}" class="btn-view-event">VIEW EVENT</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ route('events.upcoming') }}" class="btn btn-outline-light btn-view-all">VIEW ALL UPCOMING EVENTS</a>
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="empty-title">No Upcoming Events</h3>
+                    <p class="empty-description">There are currently no upcoming events scheduled. Please check back later.</p>
+                </div>
+            @endif
         </div>
         
-        <div class="col-md-4">
-            <select name="filter" class="form-select" onchange="window.location = this.value;">
-                <option value="{{ route('events.index') }}" {{ request()->is('events') && !request('filter') ? 'selected' : '' }}>
-                    All Events
-                </option>
-                <option value="{{ route('events.index', ['filter' => 'upcoming']) }}" {{ request('filter') == 'upcoming' ? 'selected' : '' }}>
-                    Upcoming Events
-                </option>
-                <option value="{{ route('events.index', ['filter' => 'past']) }}" {{ request('filter') == 'past' ? 'selected' : '' }}>
-                    Past Events
-                </option>
-            </select>
-        </div>
-    </div>
-    
-    <!-- Live Event Alert -->
-    @php
-        $liveEvent = \App\Models\Event::where('is_live', true)->first();
-    @endphp
-    
-    @if($liveEvent)
-        <div class="alert alert-danger mb-4" role="alert">
-            <div class="d-flex align-items-center">
-                <div class="me-3">
-                    <span class="live-indicator"></span>
-                </div>
-                <div class="flex-grow-1">
-                    <h5 class="alert-heading mb-1">LIVE NOW: {{ $liveEvent->title }}</h5>
-                    <p class="mb-0">{{ $liveEvent->description }}</p>
-                </div>
-                <div>
-                    <a href="{{ route('events.stream', $liveEvent) }}" class="btn btn-danger">
-                        <i class="fas fa-play-circle me-2"></i> WATCH NOW
-                    </a>
-                </div>
-            </div>
-        </div>
-    @endif
-    
-    <!-- Featured/Upcoming Event -->
-    @php
-        $featuredEvent = \App\Models\Event::where('event_date', '>', now())
-            ->where('is_featured', true)
-            ->orderBy('event_date', 'asc')
-            ->first() ?? \App\Models\Event::where('event_date', '>', now())
-            ->orderBy('event_date', 'asc')
-            ->first();
-    @endphp
-    
-    @if($featuredEvent && request('filter') != 'past')
-        <div class="row mb-5">
-            <div class="col-12">
-                <div class="card shadow position-relative">
-                    <div class="row g-0">
-                        <div class="col-md-6">
-                            @if($featuredEvent->event_banner)
-                                <div class="h-100" style="min-height: 350px; background: url('{{ $featuredEvent->event_banner }}') center/cover no-repeat;">
-                                </div>
-                            @else
-                                <div class="bg-dark d-flex align-items-center justify-content-center h-100" style="min-height: 350px;">
-                                    <h3 class="text-white">{{ $featuredEvent->title }}</h3>
-                                </div>
-                            @endif
-                            
-                            @if($featuredEvent->is_featured)
-                                <div class="position-absolute top-0 start-0 m-3">
-                                    <span class="badge bg-warning text-dark px-3 py-2">
-                                        <i class="fas fa-star me-1"></i> FEATURED EVENT
-                                    </span>
-                                </div>
-                            @endif
-                            
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <div class="event-date-badge shadow-sm">
-                                    <div class="event-date-month">
-                                        {{ $featuredEvent->event_date->format('M') }}
+        <!-- Past Events Tab Content -->
+        <div id="past" class="event-tab-content">
+            @if($pastEvents->isNotEmpty())
+                <div class="row">
+                    @foreach($pastEvents->take(6) as $event)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="event-card past-event">
+                                <div class="event-card-image">
+                                    <a href="{{ route('events.show', $event->slug) }}">
+                                        <img src="{{ $event->thumbnail }}" alt="{{ $event->name }}" class="img-fluid">
+                                    </a>
+                                    <div class="event-date">
+                                        <span class="event-day">{{ $event->event_date->format('d') }}</span>
+                                        <span class="event-month">{{ $event->event_date->format('M') }}</span>
                                     </div>
-                                    <div class="event-date-day">
-                                        {{ $featuredEvent->event_date->format('d') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="card-body p-4">
-                                <h2 class="card-title mb-3">{{ $featuredEvent->title }}</h2>
-                                <p class="card-text mb-3">{{ $featuredEvent->description }}</p>
-                                
-                                <div class="mb-4">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-calendar-alt text-primary me-2"></i>
-                                        <span>{{ $featuredEvent->event_date->format('F j, Y - g:i A') }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                        <span>{{ $featuredEvent->location }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-ticket-alt text-primary me-2"></i>
-                                        <span>${{ number_format($featuredEvent->ticket_price, 2) }}</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Main Event Fight -->
-                                @if($featuredEvent->fights->isNotEmpty())
-                                    <?php $mainFight = $featuredEvent->fights->where('is_main_event', true)->first() ?? $featuredEvent->fights->sortBy('fight_order')->first(); ?>
                                     
-                                    <div class="card mb-4">
-                                        <div class="card-header bg-danger text-white">
-                                            <h6 class="mb-0">MAIN EVENT</h6>
+                                    @if($event->videos->isNotEmpty())
+                                        <div class="event-highlight-badge">
+                                            <i class="fas fa-play"></i> Highlights
                                         </div>
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="text-center">
-                                                    <p class="mb-1 fw-bold">{{ $mainFight->fighterOne->full_name }}</p>
-                                                    <span class="badge bg-success">{{ $mainFight->fighterOne->wins }}-{{ $mainFight->fighterOne->losses }}</span>
-                                                </div>
-                                                <div class="text-center">
-                                                    <span class="vs-badge">VS</span>
-                                                </div>
-                                                <div class="text-center">
-                                                    <p class="mb-1 fw-bold">{{ $mainFight->fighterTwo->full_name }}</p>
-                                                    <span class="badge bg-success">{{ $mainFight->fighterTwo->wins }}-{{ $mainFight->fighterTwo->losses }}</span>
-                                                </div>
-                                            </div>
+                                    @endif
+                                </div>
+                                <div class="event-card-content">
+                                    <h3 class="event-title">
+                                        <a href="{{ route('events.show', $event->slug) }}">{{ $event->name }}</a>
+                                    </h3>
+                                    <div class="event-meta">
+                                        <div class="meta-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>{{ $event->venue }}, {{ $event->city }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>{{ $event->event_date->format('F j, Y') }}</span>
                                         </div>
                                     </div>
-                                @endif
-                                
-                                <div class="d-grid gap-2">
-                                    <a href="{{ route('events.show', $featuredEvent) }}" class="btn btn-primary">
-                                        <i class="fas fa-info-circle me-2"></i> EVENT DETAILS
-                                    </a>
-                                    <a href="{{ route('tickets.create', $featuredEvent) }}" class="btn btn-outline-primary">
-                                        <i class="fas fa-ticket-alt me-2"></i> BUY TICKETS
-                                    </a>
+                                    @if($event->main_event_title)
+                                        <div class="main-event">
+                                            <h4>Main Event</h4>
+                                            <p>{{ $event->main_event_title }}</p>
+                                        </div>
+                                    @endif
+                                    <div class="event-footer">
+                                        @if($event->hasResults)
+                                            <span class="results-badge">
+                                                <i class="fas fa-trophy"></i> Results Available
+                                            </span>
+                                        @endif
+                                        <a href="{{ route('events.show', $event->slug) }}" class="btn-view-event">VIEW EVENT</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ route('events.past') }}" class="btn btn-outline-light btn-view-all">VIEW ALL PAST EVENTS</a>
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3 class="empty-title">No Past Events</h3>
+                    <p class="empty-description">There are no past events in our records yet.</p>
+                </div>
+            @endif
         </div>
-    @endif
-    
-    <!-- Events List -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="border-start border-primary border-5 ps-3 mb-4">
-                {{ request('filter') == 'past' ? 'PAST EVENTS' : 'UPCOMING EVENTS' }}
-            </h2>
-        </div>
-    </div>
-    
-    <div class="row">
-        @forelse($events as $event)
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm event-card">
-                    <div class="position-relative">
-                        @if($event->event_banner)
-                            <img src="{{ $event->event_banner }}" class="card-img-top event-image" alt="{{ $event->title }}">
-                        @else
-                            <div class="event-image-placeholder bg-light d-flex justify-content-center align-items-center">
-                                <h5 class="text-muted">{{ $event->title }}</h5>
-                            </div>
-                        @endif
-                        
-                        <div class="position-absolute top-0 end-0 m-2">
-                            <div class="event-date-badge-sm shadow-sm">
-                                <div class="event-date-month-sm">
-                                    {{ $event->event_date->format('M') }}
-                                </div>
-                                <div class="event-date-day-sm">
-                                    {{ $event->event_date->format('d') }}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        @if($event->is_live)
-                            <div class="position-absolute top-0 start-0 m-2">
-                                <span class="badge bg-danger">
-                                    <span class="live-indicator-sm me-1"></span> LIVE NOW
-                                </span>
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $event->title }}</h5>
-                        
-                        <div class="small text-muted mb-3">
-                            <div class="d-flex align-items-center mb-1">
-                                <i class="fas fa-calendar-alt me-2"></i>
-                                <span>{{ $event->event_date->format('F j, Y - g:i A') }}</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-map-marker-alt me-2"></i>
-                                <span>{{ $event->location }}</span>
-                            </div>
-                        </div>
-                        
-                        <p class="card-text">
-                            {{ \Illuminate\Support\Str::limit($event->description, 100) }}
-                        </p>
-                    </div>
-                    
-                    <div class="card-footer bg-white border-top-0">
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('events.show', $event) }}" class="btn btn-outline-primary">
-                                <i class="fas fa-info-circle me-1"></i> DETAILS
-                            </a>
-                            
-                            @if($event->event_date->isFuture())
-                                <a href="{{ route('tickets.create', $event) }}" class="btn btn-primary">
-                                    <i class="fas fa-ticket-alt me-1"></i> BUY TICKETS
-                                </a>
-                            @elseif($event->is_live)
-                                <a href="{{ route('events.stream', $event) }}" class="btn btn-danger">
-                                    <i class="fas fa-play-circle me-1"></i> WATCH
-                                </a>
-                            @else
-                                <button class="btn btn-secondary" disabled>
-                                    <i class="fas fa-history me-1"></i> ENDED
-                                </button>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> No events found matching your criteria.
-                </div>
-            </div>
-        @endforelse
-    </div>
-    
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        {{ $events->links() }}
     </div>
 </div>
 @endsection
 
-@section('styles')
+@push('styles')
 <style>
-    .event-card {
-        transition: transform 0.2s;
-        border-radius: 10px;
+    /* Events Listing Section */
+    .events-listing-section {
+        position: relative;
+        padding: 5rem 0;
+        background-color: $dark-bg;
+        color: $text-light;
         overflow: hidden;
     }
     
-    .event-card:hover {
-        transform: translateY(-5px);
+    .bg-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 20vw;
+        font-family: $font-family-heading;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.03);
+        text-transform: uppercase;
+        line-height: 1;
+        z-index: 0;
+        pointer-events: none;
     }
     
-    .event-image {
-        height: 200px;
-        object-fit: cover;
+    .section-title {
+        font-family: $font-family-heading;
+        font-size: 3rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
     }
     
-    .event-image-placeholder {
-        height: 200px;
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: $text-gray;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
     }
     
-    .vs-badge {
-        display: inline-block;
-        background-color: #e63946;
-        color: white;
-        padding: 6px 12px;
-        border-radius: 50%;
-        font-weight: bold;
+    /* Event Tabs */
+    .event-tabs {
+        display: flex;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
     }
     
-    .event-date-badge {
-        background-color: white;
+    .event-tab {
+        padding: 1rem 2rem;
+        font-family: $font-family-heading;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: $text-gray;
+        text-decoration: none;
+        position: relative;
+        transition: $transition-base;
+        
+        &:hover {
+            color: $text-light;
+        }
+        
+        &.active {
+            color: $theme-red;
+            
+            &:after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background-color: $theme-red;
+            }
+        }
+    }
+    
+    /* Event Tab Content */
+    .event-tab-content {
+        display: none;
+        
+        &.active {
+            display: block;
+        }
+    }
+    
+    /* Event Card */
+    .event-card {
+        background: rgba(30, 30, 30, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
         overflow: hidden;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        width: 70px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+        
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            
+            .event-card-image img {
+                transform: scale(1.05);
+            }
+        }
+        
+        &.past-event {
+            .event-date {
+                background-color: rgba(30, 30, 30, 0.8);
+            }
+        }
     }
     
-    .event-date-month {
-        background-color: #e63946;
-        color: white;
-        padding: 5px;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-    
-    .event-date-day {
-        color: #1d3557;
-        font-size: 1.5rem;
-        font-weight: bold;
-        padding: 5px;
-    }
-    
-    .event-date-badge-sm {
-        background-color: white;
-        border-radius: 6px;
+    .event-card-image {
+        position: relative;
         overflow: hidden;
+        height: 200px;
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+    }
+    
+    .event-date {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: $theme-red;
+        color: $text-light;
+        padding: 0.5rem;
+        border-radius: 4px;
         text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        width: 50px;
+        min-width: 60px;
+        
+        .event-day {
+            display: block;
+            font-family: $font-family-heading;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .event-month {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
     }
     
-    .event-date-month-sm {
-        background-color: #e63946;
-        color: white;
-        padding: 3px;
-        font-weight: bold;
+    .event-highlight-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: $text-light;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
         font-size: 0.8rem;
+        font-weight: 600;
+        
+        i {
+            color: $theme-red;
+            margin-right: 0.3rem;
+        }
+    }
+    
+    .event-card-content {
+        padding: 1.5rem;
+    }
+    
+    .event-title {
+        font-family: $font-family-heading;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+        
+        a {
+            color: $text-light;
+            text-decoration: none;
+            transition: $transition-base;
+            
+            &:hover {
+                color: $theme-red;
+            }
+        }
+    }
+    
+    .event-meta {
+        margin-bottom: 1rem;
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            
+            i {
+                color: $theme-red;
+                margin-right: 0.5rem;
+                width: 16px;
+                text-align: center;
+            }
+            
+            span {
+                color: $text-gray;
+                font-size: 0.9rem;
+            }
+        }
+    }
+    
+    .main-event {
+        margin-bottom: 1.25rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        
+        h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: $text-gray;
+            margin-bottom: 0.3rem;
+        }
+        
+        p {
+            font-family: $font-family-heading;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+    }
+    
+    .event-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        
+        .ticket-badge, .stream-badge, .results-badge {
+            font-size: 0.8rem;
+            color: $text-gray;
+            margin-right: 0.5rem;
+            
+            i {
+                color: $theme-green;
+                margin-right: 0.3rem;
+            }
+        }
+        
+        .results-badge i {
+            color: $theme-gold;
+        }
+        
+        .btn-view-event {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: $text-light;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: $transition-base;
+            
+            &:hover {
+                background-color: $theme-red;
+            }
+        }
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 0;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.1);
+        margin-bottom: 1rem;
+    }
+    
+    .empty-title {
+        font-family: $font-family-heading;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-description {
+        color: $text-gray;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    /* View All Button */
+    .btn-view-all {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
         text-transform: uppercase;
-    }
-    
-    .event-date-day-sm {
-        color: #1d3557;
-        font-size: 1.2rem;
-        font-weight: bold;
-        padding: 3px;
-    }
-    
-    .live-indicator {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        background-color: #ff0000;
-        border-radius: 50%;
-        animation: pulse 1.5s infinite;
-    }
-    
-    .live-indicator-sm {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background-color: #ffffff;
-        border-radius: 50%;
-        animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes pulse {
-        0% {
-            opacity: 1;
+        letter-spacing: 1px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: $transition-base;
+        
+        &:hover {
+            background-color: $theme-red;
+            border-color: $theme-red;
         }
-        50% {
-            opacity: 0.4;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+        .section-title {
+            font-size: 2.5rem;
         }
-        100% {
-            opacity: 1;
+        
+        .event-tabs {
+            justify-content: center;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .event-tabs {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            
+            .event-tab {
+                padding: 0.75rem 1.25rem;
+                white-space: nowrap;
+            }
         }
     }
 </style>
-@endsection
+@endpush
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.event-tab');
+        const tabContents = document.querySelectorAll('.event-tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the tab target
+                const target = this.getAttribute('data-tab');
+                
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Show the target content
+                document.getElementById(target).classList.add('active');
+                
+                // Update URL hash
+                window.location.hash = target;
+            });
+        });
+        
+        // Check for hash in URL
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const tab = document.querySelector(`.event-tab[data-tab="${hash}"]`);
+            
+            if (tab) {
+                tab.click();
+            }
+        }
+    });
+</script>
+@endpush 

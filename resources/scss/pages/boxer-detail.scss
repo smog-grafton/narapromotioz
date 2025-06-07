@@ -1,0 +1,277 @@
+// Boxer Detail Page Specific Styles
+
+// Biography Section
+.bio-section {
+    background: $darker-bg;
+    padding: 4rem 0;
+    color: $text-light;
+    
+    .section-title {
+        font-family: $font-family-heading;
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: $text-light;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 400;
+    }
+    
+    .bio-content {
+        background: $dark-bg;
+        padding: 3rem;
+        border-radius: $border-radius-lg;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: $shadow-dark;
+        
+        p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: $text-gray;
+            margin-bottom: 1.5rem;
+            
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+    
+    @media (max-width: 768px) {
+        padding: 3rem 0;
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .bio-content {
+            padding: 2rem;
+            
+            p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+        }
+    }
+}
+
+// Events Section
+.events-section {
+    background: $dark-bg;
+    padding: 4rem 0;
+    color: $text-light;
+    
+    .section-title {
+        font-family: $font-family-heading;
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: $text-light;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 400;
+    }
+    
+    .event-list {
+        .event-item {
+            background: $darker-bg;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: $border-radius-lg;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: $transition-base;
+            box-shadow: $shadow-dark;
+            
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: $shadow-dark-lg;
+                border-color: $theme-red;
+            }
+            
+            .event-date {
+                color: $theme-red;
+                font-weight: 600;
+                font-size: 1rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 0.5rem;
+            }
+            
+            .event-title {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $text-light;
+                margin-bottom: 0.5rem;
+                font-family: $font-family-heading;
+            }
+            
+            .event-location {
+                color: $text-gray;
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .event-description {
+                color: $text-gray;
+                line-height: 1.6;
+            }
+        }
+    }
+    
+    @media (max-width: 768px) {
+        padding: 3rem 0;
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .event-list .event-item {
+            padding: 1.5rem;
+            
+            .event-title {
+                font-size: 1.25rem;
+            }
+        }
+    }
+}
+
+// Videos Section
+.videos-section {
+    background: $darker-bg;
+    padding: 4rem 0;
+    color: $text-light;
+    
+    .section-title {
+        font-family: $font-family-heading;
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: $text-light;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 400;
+    }
+    
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .video-item {
+        background: $dark-bg;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: $border-radius-lg;
+        overflow: hidden;
+        transition: $transition-base;
+        box-shadow: $shadow-dark;
+        
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: $shadow-dark-lg;
+            border-color: $theme-red;
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: $darkest-bg;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .play-icon {
+                width: 60px;
+                height: 60px;
+                background: rgba($theme-red, 0.9);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.5rem;
+                transition: $transition-base;
+                
+                &:hover {
+                    background: $theme-red;
+                    transform: scale(1.1);
+                }
+            }
+        }
+        
+        .video-content {
+            padding: 1.5rem;
+            
+            .video-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: $text-light;
+                margin-bottom: 0.5rem;
+                line-height: 1.4;
+            }
+            
+            .video-description {
+                color: $text-gray;
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+        }
+    }
+    
+    @media (max-width: 768px) {
+        padding: 3rem 0;
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .video-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+    }
+}
+
+// General section spacing and consistency
+.content-section {
+    &:nth-child(even) {
+        background: $dark-bg;
+    }
+    
+    &:nth-child(odd) {
+        background: $darker-bg;
+    }
+}
+
+// Back to top button
+.back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: $theme-red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: $transition-base;
+    z-index: 1000;
+    box-shadow: $shadow-dark-lg;
+    
+    &:hover {
+        background: $theme-red-dark;
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        bottom: 1rem;
+        right: 1rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+} 

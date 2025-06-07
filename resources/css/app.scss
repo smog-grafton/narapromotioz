@@ -1,0 +1,12 @@
+// Bootstrap 5 variables (customize before importing Bootstrap)
+// You can override Bootstrap variables here
+// Example: $primary: #your-color;
+
+// Import custom Bootstrap variable overrides
+@import 'variables';
+
+// Import Bootstrap 5 SCSS
+@import 'bootstrap/scss/bootstrap';
+
+// Custom SCSS styles
+// Add your custom styles here 

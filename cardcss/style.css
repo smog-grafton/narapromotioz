@@ -1,0 +1,335 @@
+@charset "UTF-8";
+/**
+* Eric Meyer's Reset CSS v2.0
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input, textarea {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section, time {
+  display: block;
+}
+
+body {
+  line-height: 1;
+  color: black;
+  background: white;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* meyerweb css reset end */
+
+textarea:focus, input:focus {
+  outline: 0;
+}
+
+input {
+  border-width: 0;
+}
+
+em {
+  font-style: italic;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.group:before,
+.group:after {
+  content: " ";
+  display: table;
+}
+
+.group:after {
+  clear: both;
+}
+
+.group {
+  zoom: 1; /* ie 6/7 */
+}
+
+embed,
+img,
+object,
+video {
+  max-width: 100%;
+}
+sup {
+  font-size: 58.3%;
+  vertical-align: text-top;
+}
+sub {
+  font-size: 58.3%;
+  vertical-align: text-bottom;
+}
+.no-space-between-inline-blocks {
+  *letter-spacing: normal; /*reset IE < 8*/
+  letter-spacing: -0.31em; /*webkit*/
+  word-spacing: -0.43em; /*IE < 8 && gecko*/
+}
+/*restore spacing on inner elements*/
+.no-space-between-inline-blocks > * {
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+.displace {
+  left: -5000px;
+  position: absolute;
+}
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*,
+*:after,
+*:before {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+html {
+  font-size: 16px;
+}
+body {
+  color: #000000;
+  font-size: 0.75rem; /* 12px / 16px = 0.75rem */
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+.global_container_ {
+  float: none;
+  height: 686px;
+  margin: 0 auto;
+  min-height: 686px;
+  position: relative;
+  width: 333px;
+  background: #000000;
+}
+.col {
+  left: 50%;
+  min-height: 677px;
+  padding: 47px 43px;
+  position: absolute;
+  top: 7px;
+  width: 319px;
+  background: url(images/rectangularline.png) no-repeat;
+  margin-left: -157.5px;
+}
+.text {
+  display: block;
+  margin: 0 0 0 2px;
+  position: relative;
+}
+.text-2 {
+  display: block;
+  margin: 34px 0 0 2px;
+  position: relative;
+}
+.titles {
+  margin: 15px 0 0;
+  position: relative;
+}
+.titles > * {
+  float: left;
+  margin: 0 5.46px 0 0;
+}
+.titles > *:last-child {
+  margin-right: 0 !important;
+}
+.rectangle-2-holder {
+  padding: 5px 0;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+.wbc {
+  display: block;
+  margin: 0 auto;
+}
+.rectangle-2-copy-holder {
+  padding: 6px 3px 5px;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+.wbf {
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  right: 3px;
+}
+.rectangle-2-copy-2-holder {
+  padding: 6px 0 5px;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+.abu {
+  display: block;
+  margin: 0 auto;
+}
+.rectangle-2-copy-3-holder {
+  padding: 6px 0 5px;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+.ubf {
+  display: block;
+  margin: 0 auto;
+}
+.sulaiman-musalo-copy {
+  left: 50%;
+  position: absolute;
+  top: 242px;
+  margin-left: -120.5px;
+}
+.col-2 {
+  left: 50%;
+  min-height: 292px;
+  padding: 128px 4px 27px;
+  position: absolute;
+  top: 394px;
+  width: 333px;
+  background: url(images/gradient_fill_1.png) no-repeat;
+  margin-left: -166.5px;
+}
+.statscards {
+  left: 2.5px;
+  margin: 0 auto;
+  position: relative;
+  width: 320px;
+}
+.statscards > * {
+  float: left;
+}
+.statscards > *:last-child {
+  margin-right: 0 !important;
+}
+.rectangle-1-holder {
+  padding: 9px 0 7px;
+  position: relative;
+  width: 64px;
+  background: #108a00;
+}
+.text-3 {
+  display: block;
+  margin: 0 auto;
+}
+.rectangle-1-copy-holder {
+  padding: 8px 0;
+  position: relative;
+  width: 64px;
+  background: #eb0808;
+}
+.text-4 {
+  display: block;
+  margin: 0 auto;
+}
+.rectangle-1-copy-2-holder {
+  padding: 7px 0 10px;
+  position: relative;
+  width: 64px;
+  background: #72a4b5;
+}
+.text-5 {
+  display: block;
+  margin: 0 auto;
+}
+.rectangle-1-copy-3-holder {
+  padding: 8px 0;
+  position: relative;
+  width: 64px;
+  background: #108a00;
+}
+.text-6 {
+  display: block;
+  margin: 0 auto;
+}
+.rectangle-1-copy-4-holder {
+  padding: 8px 0;
+  position: relative;
+  width: 64px;
+  background: #970303;
+}
+.text-7 {
+  display: block;
+  margin: 0 auto;
+}
+.statstext {
+  margin: 7px 12px 0 17px;
+  position: relative;
+}
+.wins {
+  float: left;
+}
+.losses {
+  float: left;
+  margin: 0 0 0 24px;
+}
+.draws {
+  float: left;
+  margin: 1px 0 0 19px;
+}
+.kos {
+  float: left;
+  margin: 0 0 0 22px;
+}
+.kos-2 {
+  float: left;
+  margin: 0 0 0 27px;
+}
+.logo {
+  display: block;
+  margin: 36px auto 0;
+  position: relative;
+  right: 5.5px;
+}

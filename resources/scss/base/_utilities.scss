@@ -1,0 +1,119 @@
+// Utility classes for common styling needs
+
+// Text utilities
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-lg {
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+}
+
+// Background utilities
+.bg-dark-overlay {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $overlay-bg;
+    z-index: 1;
+  }
+  
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+}
+
+// Spacing utilities
+.py-section {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  
+  @media (max-width: 768px) {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.my-section {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  
+  @media (max-width: 768px) {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+}
+
+// Display utilities
+.full-height {
+  height: 100vh;
+  min-height: 600px;
+}
+
+.overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 100%;
+}
+
+// Animation utilities
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.hover-lift {
+  transition: $transition-base;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow-lg;
+  }
+}
+
+// Border utilities
+.border-gradient {
+  border: 2px solid transparent;
+  background: linear-gradient($theme-black, $theme-black) padding-box,
+              linear-gradient(45deg, $theme-red, $theme-blue) border-box;
+}
+
+// Flex utilities
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+} 

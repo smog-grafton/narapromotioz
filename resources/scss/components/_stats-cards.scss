@@ -1,0 +1,463 @@
+// Boxing Stats Component Styles
+
+.boxing-stats-section {
+  background: $darker-bg;
+  padding: 5rem 0;
+  color: $text-light;
+  
+  .section-header {
+    margin-bottom: 3rem;
+    
+    .section-title {
+      font-family: $font-family-heading;
+      font-size: 3rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, $text-light, $text-gray);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: $text-gray;
+      font-weight: 500;
+    }
+  }
+}
+
+.boxing-stats-grid {
+  .boxing-stat-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius-xl;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+      opacity: 0;
+      transition: $transition-base;
+      pointer-events: none;
+    }
+    
+    &:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+      
+      &:before {
+        opacity: 1;
+      }
+      
+      .stat-icon-bg {
+        transform: scale(1.1);
+        box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4);
+      }
+      
+      .ring-progress {
+        animation: progressPulse 1.5s ease-in-out infinite;
+      }
+    }
+    
+    // Theme variations
+    &.wins {
+      .stat-icon-bg {
+        background: linear-gradient(135deg, $theme-green, #20c662);
+      }
+      .ring-progress {
+        stroke: $theme-green;
+      }
+    }
+    
+    &.knockouts {
+      .stat-icon-bg {
+        background: linear-gradient(135deg, $theme-red, $theme-red-light);
+      }
+      .ring-progress {
+        stroke: $theme-red;
+      }
+    }
+    
+    &.losses {
+      .stat-icon-bg {
+        background: linear-gradient(135deg, $theme-blue, #4dabf7);
+      }
+      .ring-progress {
+        stroke: $theme-blue;
+      }
+    }
+    
+    &.experience {
+      .stat-icon-bg {
+        background: linear-gradient(135deg, $theme-orange, #ffa726);
+      }
+      .ring-progress {
+        stroke: $theme-orange;
+      }
+    }
+    
+    .stat-icon-bg {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 25px rgba(220, 53, 69, 0.2);
+      
+      i {
+        font-size: 2rem;
+        color: $text-light;
+      }
+    }
+    
+    .stat-content {
+      margin-bottom: 2rem;
+      
+      .stat-number {
+        font-family: $font-family-heading;
+        font-size: 3rem;
+        font-weight: 400;
+        color: $text-light;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      
+      .stat-label {
+        font-size: 1.125rem;
+        color: $text-light;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      .stat-description {
+        font-size: 0.9rem;
+        color: $text-gray;
+        font-weight: 400;
+      }
+    }
+    
+    .stat-visual {
+      .stat-ring {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+        
+        .ring-progress {
+          width: 100%;
+          height: 100%;
+          transform: rotate(-90deg);
+          
+          circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            
+            &:first-child {
+              stroke: rgba(255, 255, 255, 0.1);
+            }
+            
+            &:last-child {
+              stroke-dasharray: calc(2 * 3.14159 * 54);
+              stroke-dashoffset: calc(2 * 3.14159 * 54 * (1 - var(--progress, 0) / 100));
+              transition: stroke-dashoffset 2s ease-in-out;
+            }
+          }
+        }
+        
+        .ring-center {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-family: $font-family-heading;
+          font-size: 1.5rem;
+          font-weight: 400;
+          color: $text-light;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+  }
+}
+
+// Performance Metrics Cards
+.performance-metrics {
+  .metric-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $border-radius-lg;
+    padding: 2rem;
+    text-align: center;
+    transition: $transition-base;
+    backdrop-filter: blur(15px);
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $shadow-dark-lg;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      
+      i {
+        font-size: 1.5rem;
+        color: $theme-red;
+      }
+      
+      span {
+        font-size: 1rem;
+        color: $text-gray;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+    }
+    
+    .metric-value {
+      font-family: $font-family-heading;
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: $text-light;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+// Legacy Stats Section (keeping for compatibility)
+.stats-section {
+  background: $dark-bg;
+  padding: 4rem 0;
+  
+  .section-title {
+    font-family: $font-family-heading;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 400;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: $darker-bg;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  text-align: center;
+  transition: $transition-base;
+  box-shadow: $shadow-dark;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-dark-lg;
+    border-color: $theme-red;
+  }
+  
+  .stat-icon {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, $theme-red, #ff4444);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+    
+    i {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $text-light;
+    line-height: 1;
+    margin: 0.5rem 0;
+    font-family: $font-family-heading;
+  }
+  
+  .stat-label {
+    color: $text-gray;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+  
+  &.highlight {
+    background: linear-gradient(135deg, rgba($theme-red, 0.1), rgba(#ff4444, 0.05));
+    border-color: $theme-red;
+    
+    .stat-icon {
+      background: linear-gradient(135deg, $theme-red, #ff6666);
+      box-shadow: 0 4px 15px rgba($theme-red, 0.3);
+    }
+  }
+}
+
+// Animations
+@keyframes progressPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px currentColor);
+  }
+}
+
+// Responsive design
+@media (max-width: 992px) {
+  .boxing-stats-section {
+    padding: 4rem 0;
+    
+    .section-header .section-title {
+      font-size: 2.5rem;
+    }
+    
+    .boxing-stat-card {
+      padding: 2rem 1.5rem;
+      
+      .stat-content .stat-number {
+        font-size: 2.5rem;
+      }
+    }
+  }
+  
+  .performance-metrics .metric-card {
+    padding: 1.5rem;
+    
+    .metric-value {
+      font-size: 2rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .boxing-stats-section {
+    padding: 3rem 0;
+    
+    .section-header .section-title {
+      font-size: 2rem;
+    }
+    
+    .boxing-stat-card {
+      padding: 1.25rem 0.75rem;
+      
+      .stat-icon-bg {
+        width: 50px;
+        height: 50px;
+        
+        i {
+          font-size: 1.25rem;
+        }
+      }
+      
+      .stat-content {
+        .stat-number {
+          font-size: 1.75rem;
+        }
+        
+        .stat-label {
+          font-size: 0.9rem;
+        }
+        
+        .stat-description {
+          font-size: 0.8rem;
+        }
+      }
+      
+      .stat-visual .stat-ring {
+        width: 80px;
+        height: 80px;
+        
+        .ring-center {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Very small mobile screens - ensure 3-column layout stays readable
+@media (max-width: 480px) {
+  .boxing-stats-section {
+    .boxing-stat-card {
+      padding: 1rem 0.5rem;
+      
+      .stat-icon-bg {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 1rem;
+        
+        i {
+          font-size: 1rem;
+        }
+      }
+      
+      .stat-content {
+        margin-bottom: 1rem;
+        
+        .stat-number {
+      font-size: 1.5rem;
+    }
+    
+        .stat-label {
+          font-size: 0.8rem;
+          margin-bottom: 0.25rem;
+        }
+        
+        .stat-description {
+          font-size: 0.7rem;
+        }
+      }
+      
+      .stat-visual .stat-ring {
+        width: 70px;
+        height: 70px;
+        
+        .ring-center {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+} 

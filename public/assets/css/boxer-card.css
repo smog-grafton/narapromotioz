@@ -1,0 +1,798 @@
+@charset "UTF-8";
+/**
+* Eric Meyer's Reset CSS v2.0 - Scoped for boxer cards only
+*/
+.boxer-card-container html, .boxer-card-container body, .boxer-card-container div, .boxer-card-container span, .boxer-card-container applet, .boxer-card-container object, .boxer-card-container iframe,
+.boxer-card-container h1, .boxer-card-container h2, .boxer-card-container h3, .boxer-card-container h4, .boxer-card-container h5, .boxer-card-container h6, .boxer-card-container p, .boxer-card-container blockquote, .boxer-card-container pre,
+.boxer-card-container a, .boxer-card-container abbr, .boxer-card-container acronym, .boxer-card-container address, .boxer-card-container big, .boxer-card-container cite, .boxer-card-container code,
+.boxer-card-container del, .boxer-card-container dfn, .boxer-card-container em, .boxer-card-container img, .boxer-card-container ins, .boxer-card-container kbd, .boxer-card-container q, .boxer-card-container s, .boxer-card-container samp,
+.boxer-card-container small, .boxer-card-container strike, .boxer-card-container strong, .boxer-card-container sub, .boxer-card-container sup, .boxer-card-container tt, .boxer-card-container var,
+.boxer-card-container b, .boxer-card-container u, .boxer-card-container i, .boxer-card-container center,
+.boxer-card-container dl, .boxer-card-container dt, .boxer-card-container dd, .boxer-card-container ol, .boxer-card-container ul, .boxer-card-container li,
+.boxer-card-container fieldset, .boxer-card-container form, .boxer-card-container label, .boxer-card-container legend,
+.boxer-card-container table, .boxer-card-container caption, .boxer-card-container tbody, .boxer-card-container tfoot, .boxer-card-container thead, .boxer-card-container tr, .boxer-card-container th, .boxer-card-container td,
+.boxer-card-container article, .boxer-card-container aside, .boxer-card-container canvas, .boxer-card-container details, .boxer-card-container embed,
+.boxer-card-container figure, .boxer-card-container figcaption, .boxer-card-container footer, .boxer-card-container header,
+.boxer-card-container menu, .boxer-card-container nav, .boxer-card-container output, .boxer-card-container ruby, .boxer-card-container section, .boxer-card-container summary,
+.boxer-card-container time, .boxer-card-container mark, .boxer-card-container audio, .boxer-card-container video, .boxer-card-container input, .boxer-card-container textarea {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+.boxer-card-container article, .boxer-card-container aside, .boxer-card-container details, .boxer-card-container figcaption, .boxer-card-container figure,
+.boxer-card-container footer, .boxer-card-container header, .boxer-card-container menu, .boxer-card-container nav, .boxer-card-container section, .boxer-card-container time {
+  display: block;
+}
+
+.boxer-card-container a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.boxer-card-container ol, .boxer-card-container ul {
+  list-style: none;
+}
+
+.boxer-card-container blockquote, .boxer-card-container q {
+  quotes: none;
+}
+
+.boxer-card-container blockquote:before, .boxer-card-container blockquote:after,
+.boxer-card-container q:before, .boxer-card-container q:after {
+  content: '';
+  content: none;
+}
+
+.boxer-card-container table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* meyerweb css reset end */
+
+.boxer-card-container textarea:focus, .boxer-card-container input:focus {
+  outline: 0;
+}
+
+.boxer-card-container input {
+  border-width: 0;
+}
+
+.boxer-card-container em {
+  font-style: italic;
+}
+
+.boxer-card-container h1, .boxer-card-container h2, .boxer-card-container h3, .boxer-card-container h4, .boxer-card-container h5, .boxer-card-container h6 {
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.boxer-card-container .group:before,
+.boxer-card-container .group:after {
+  content: " ";
+  display: table;
+}
+
+.boxer-card-container .group:after {
+  clear: both;
+}
+
+.boxer-card-container .group {
+  zoom: 1; /* ie 6/7 */
+}
+
+.boxer-card-container embed,
+.boxer-card-container img,
+.boxer-card-container object,
+.boxer-card-container video {
+  max-width: 100%;
+}
+
+.boxer-card-container sup {
+  font-size: 58.3%;
+  vertical-align: text-top;
+}
+
+.boxer-card-container sub {
+  font-size: 58.3%;
+  vertical-align: text-bottom;
+}
+
+.boxer-card-container .no-space-between-inline-blocks {
+  letter-spacing: normal; /* reset IE < 8 */
+  letter-spacing: -0.31em; /* webkit */
+  word-spacing: -0.43em; /* IE < 8 && gecko */
+}
+
+/*restore spacing on inner elements*/
+.boxer-card-container .no-space-between-inline-blocks > * {
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+
+.boxer-card-container .displace {
+  left: -5000px;
+  position: absolute;
+}
+
+/* Boxer Card Wrapper for better responsive control */
+.boxer-card-wrapper {
+  width: 100%;
+  max-width: 333px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.boxer-card-container {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; /* Make it fluid */
+  max-width: 333px; /* Maximum width */
+  background: #000000;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px; /* Reduced from 686px to 500px */
+}
+
+.boxer-card-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.boxer-card-container *,
+.boxer-card-container *:after,
+.boxer-card-container *:before {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+.boxer-card-container {
+  font-size: 16px;
+  color: #000000;
+  font-size: 0.75rem; /* 12px / 16px = 0.75rem */
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.boxer-card-container .global_container_ {
+  position: relative;
+  width: 100%;
+  height: auto; /* Remove fixed height */
+  min-height: auto; /* Remove fixed min-height */
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.boxer-card-container .col {
+  position: relative; /* Change from absolute to relative */
+  width: 100%;
+  padding: 25px 30px 15px; /* Reduced padding */
+  background: url('../images/boxer-card/rectangularline.png') no-repeat;
+  background-size: cover;
+  background-position: center;
+  order: 1; /* Control flex order */
+}
+
+.boxer-card-container .text {
+  display: block;
+  margin: 0 0 0 2px;
+  position: relative;
+}
+
+.boxer-card-container .text-2 {
+  display: block;
+  margin: 34px 0 0 2px;
+  position: relative;
+}
+
+.boxer-card-container .titles {
+  margin: 15px 0 0; /* Keep existing spacing */
+  position: relative;
+}
+
+.boxer-card-container .titles > * {
+  float: left;
+  margin: 0 5.46px 0 0;
+}
+
+.boxer-card-container .titles > *:last-child {
+  margin-right: 0 !important;
+}
+
+.boxer-card-container .rectangle-2-holder {
+  padding: 5px 0;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+
+.boxer-card-container .wbc {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-2-copy-holder {
+  padding: 6px 3px 5px;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+
+.boxer-card-container .wbf {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-2-copy-2-holder {
+  padding: 5px 7px;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+
+.boxer-card-container .abu {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-2-copy-3-holder {
+  padding: 5px 8px;
+  position: relative;
+  width: 45px;
+  background: #c1c1c1;
+}
+
+.boxer-card-container .ubf {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .sulaiman-musalo-copy {
+  position: relative; /* Change from absolute to relative */
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: -50px auto 0; /* Negative margin to overlap with top content */
+  z-index: 1;
+  order: 2; /* Position after the text content */
+  display: block;
+}
+
+/* Dark gradient overlay for better text visibility and smoother bottom edge */
+.boxer-card-container .sulaiman-musalo-copy::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px; /* Increased height for better gradient effect */
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.7) 20%,
+    rgba(0, 0, 0, 0.5) 40%,
+    rgba(0, 0, 0, 0.3) 60%,
+    rgba(0, 0, 0, 0.1) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+.boxer-card-container .col-2 {
+  position: relative; /* Change from absolute to relative */
+  width: 100%;
+  max-width: 267px;
+  margin: -80px auto 20px; /* Negative margin to overlap fighter image */
+  z-index: 3; /* Increased z-index to appear above gradient */
+  order: 3; /* Position after the fighter image */
+  padding: 0 15px;
+}
+
+.boxer-card-container .statscards {
+  margin: 0 0 12px;
+  position: relative;
+  filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.7));
+}
+
+.boxer-card-container .statscards > * {
+  float: left;
+  margin: 0 4.2px 0 0;
+}
+
+.boxer-card-container .statscards > *:last-child {
+  margin-right: 0 !important;
+}
+
+.boxer-card-container .rectangle-1-holder {
+  padding: 8px 7px 8px 8px;
+  position: relative;
+  width: 45px;
+  background: #16a846;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.boxer-card-container .text-3 {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-1-copy-holder {
+  padding: 8px 7px 8px 8px;
+  position: relative;
+  width: 45px;
+  background: #e2252c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.boxer-card-container .text-4 {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-1-copy-2-holder {
+  padding: 8px 7px;
+  position: relative;
+  width: 45px;
+  background: #009fef;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.boxer-card-container .text-5 {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-1-copy-3-holder {
+  padding: 8px 7px;
+  position: relative;
+  width: 45px;
+  background: #16a846;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.boxer-card-container .text-6 {
+  display: block;
+  margin: 0 auto;
+}
+
+.boxer-card-container .rectangle-1-copy-4-holder {
+  padding: 8px 7px;
+  position: relative;
+  width: 45px;
+  background: #e2252c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.boxer-card-container .text-7 {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Remove old statstext styling and update labels to work within rectangle holders */
+.boxer-card-container .rectangle-1-holder .stats-label,
+.boxer-card-container .rectangle-1-copy-holder .stats-label,
+.boxer-card-container .rectangle-1-copy-2-holder .stats-label,
+.boxer-card-container .rectangle-1-copy-3-holder .stats-label,
+.boxer-card-container .rectangle-1-copy-4-holder .stats-label {
+  font-family: Arial, sans-serif;
+  font-size: 8px;
+  font-weight: normal;
+  color: #ffffff;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 1;
+  margin-top: 4px;
+  display: block;
+  width: 100%;
+}
+
+.boxer-card-container .wins {
+  float: left;
+  margin: 0 14.5px 0 8px;
+}
+
+.boxer-card-container .losses {
+  float: left;
+  margin: 0 1.5px 0 0;
+}
+
+.boxer-card-container .draws {
+  float: left;
+  margin: 0 3.5px 0 0;
+}
+
+.boxer-card-container .kos {
+  float: left;
+  margin: 0 8px 0 0;
+}
+
+.boxer-card-container .kos-2 {
+  float: left;
+}
+
+.boxer-card-container .logo {
+  margin: 8px auto 6px auto;
+  display: block;
+  position: relative;
+}
+
+/* Responsive Design - Bootstrap-style responsive utilities */
+@media (max-width: 768px) {
+  .boxer-card-wrapper {
+    max-width: 280px;
+  }
+  
+  .boxer-card-container {
+    max-width: 280px;
+    min-height: 420px; /* Reduced height for tablet */
+  }
+  
+  .boxer-card-container .col {
+    padding: 20px 25px 10px; /* Reduced padding */
+  }
+  
+  .boxer-card-container .sulaiman-musalo-copy {
+    max-width: 240px;
+    margin: -40px auto 0; /* Adjusted overlap */
+  }
+  
+  .boxer-card-container .sulaiman-musalo-copy::after {
+    height: 120px; /* Adjusted height for tablet */
+  }
+  
+  .boxer-card-container .col-2 {
+    max-width: 220px;
+    margin: -70px auto 15px; /* Adjusted overlap */
+  }
+  
+  .boxer-card-container .name-text {
+    font-size: 24px;
+    width: 130px;
+    letter-spacing: 0.8px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-text {
+    font-size: 10px;
+    width: 105px;
+    letter-spacing: 1.2px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-class-text {
+    margin: 12px 0 0 2px; /* Reduced gap */
+  }
+  
+  .boxer-card-container .titles {
+    margin: 12px 0 0; /* Reduced gap */
+  }
+}
+
+@media (max-width: 480px) {
+  .boxer-card-wrapper {
+    max-width: 260px;
+  }
+  
+  .boxer-card-container {
+    max-width: 260px;
+    min-height: 380px; /* Further reduced height for mobile */
+  }
+  
+  .boxer-card-container .col {
+    padding: 15px 20px 8px; /* Further reduced padding */
+  }
+  
+  .boxer-card-container .sulaiman-musalo-copy {
+    max-width: 220px;
+    margin: -35px auto 0; /* Adjusted overlap for mobile */
+  }
+  
+  .boxer-card-container .sulaiman-musalo-copy::after {
+    height: 100px; /* Further reduced height for mobile */
+  }
+  
+  .boxer-card-container .col-2 {
+    max-width: 200px;
+    margin: -60px auto 12px; /* Adjusted overlap for mobile */
+    padding: 0 10px;
+  }
+  
+  .boxer-card-container .statscards > * {
+    margin: 0 2px 0 0;
+  }
+  
+  .boxer-card-container .rectangle-1-holder,
+  .boxer-card-container .rectangle-1-copy-holder,
+  .boxer-card-container .rectangle-1-copy-2-holder,
+  .boxer-card-container .rectangle-1-copy-3-holder,
+  .boxer-card-container .rectangle-1-copy-4-holder {
+    width: 38px;
+    padding: 6px 5px;
+  }
+  
+  .boxer-card-container .rectangle-1-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-2-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-3-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-4-holder .stats-label {
+    font-size: 6px;
+    line-height: 1;
+    margin-top: 3px;
+    letter-spacing: 0.2px;
+  }
+  
+  .boxer-card-container .logo {
+    margin: 6px auto 4px auto; /* Reduced margins for smaller screens */
+    width: 70px;
+    height: auto;
+  }
+  
+  .boxer-card-container .name-text {
+    font-size: 20px;
+    width: 110px;
+    letter-spacing: 0.6px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-text {
+    font-size: 9px;
+    width: 95px;
+    letter-spacing: 1px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-class-text {
+    margin: 10px 0 0 2px; /* Further reduced gap */
+  }
+  
+  .boxer-card-container .titles {
+    margin: 10px 0 0; /* Further reduced gap */
+  }
+}
+
+/* Boxer Card Link Overlay */
+.boxer-link-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  text-decoration: none;
+}
+
+.boxer-link-overlay:hover {
+  text-decoration: none;
+}
+
+/* Styling for editable stat numbers */
+.boxer-card-container .stat-number {
+  display: block;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  line-height: 31px; /* Match the original image height */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  min-height: 31px; /* Ensure consistent height */
+  width: 30px; /* Match original image width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments for stat numbers */
+@media (max-width: 480px) {
+  .boxer-card-container .stat-number {
+    font-size: 16px;
+    line-height: 28px;
+    min-height: 28px;
+    width: 26px;
+  }
+}
+
+/* Styling for editable title text */
+.boxer-card-container .title-text {
+  display: block;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: #000000;
+  text-align: center;
+  line-height: 14px; /* Match the original image height */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-height: 14px; /* Ensure consistent height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments for title text */
+@media (max-width: 480px) {
+  .boxer-card-container .title-text {
+    font-size: 9px;
+    line-height: 12px;
+    min-height: 12px;
+    letter-spacing: 0.3px;
+  }
+}
+
+/* Import Google Fonts for boxer card text */
+@import url('https://fonts.googleapis.com/css2?family=Anton:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kuunari:wght@400;700&display=swap');
+
+/* Styling for editable boxer name text */
+.boxer-card-container .boxer-name-text {
+  display: block;
+  margin: 0 0 0 2px;
+  position: relative;
+}
+
+.boxer-card-container .name-text {
+  font-family: 'Kuunari', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  display: block;
+  width: 159px;
+  height: auto;
+  min-height: 85px;
+  word-wrap: break-word;
+}
+
+/* Styling for editable weight class text */
+.boxer-card-container .weight-class-text {
+  display: block;
+  margin: 15px 0 0 2px; /* Reduced from 22px to 15px */
+  position: relative;
+}
+
+.boxer-card-container .weight-text {
+  font-family: 'Anton', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  display: block;
+  width: 125px;
+  height: auto;
+  min-height: 16px;
+  line-height: 1.2;
+}
+
+/* Responsive adjustments for name and weight text */
+@media (max-width: 768px) {
+  .boxer-card-container .name-text {
+    font-size: 24px;
+    width: 130px;
+    letter-spacing: 0.8px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-text {
+    font-size: 10px;
+    width: 105px;
+    letter-spacing: 1.2px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-class-text {
+    margin: 12px 0 0 2px; /* Reduced gap */
+  }
+  
+  .boxer-card-container .titles {
+    margin: 12px 0 0; /* Reduced gap */
+  }
+}
+
+@media (max-width: 480px) {
+  .boxer-card-container .name-text {
+    font-size: 20px;
+    width: 110px;
+    letter-spacing: 0.6px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-text {
+    font-size: 9px;
+    width: 95px;
+    letter-spacing: 1px;
+    line-height: 1.1; /* Tighter line height */
+  }
+  
+  .boxer-card-container .weight-class-text {
+    margin: 10px 0 0 2px; /* Further reduced gap */
+  }
+  
+  .boxer-card-container .titles {
+    margin: 10px 0 0; /* Further reduced gap */
+  }
+}
+
+/* Styling for editable stats labels */
+.boxer-card-container .stats-label {
+  float: left;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  font-weight: normal;
+  color: #ffffff;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments for stats labels */
+@media (max-width: 480px) {
+  .boxer-card-container .rectangle-1-holder,
+  .boxer-card-container .rectangle-1-copy-holder,
+  .boxer-card-container .rectangle-1-copy-2-holder,
+  .boxer-card-container .rectangle-1-copy-3-holder,
+  .boxer-card-container .rectangle-1-copy-4-holder {
+    width: 38px;
+    padding: 6px 5px;
+  }
+  
+  .boxer-card-container .rectangle-1-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-2-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-3-holder .stats-label,
+  .boxer-card-container .rectangle-1-copy-4-holder .stats-label {
+    font-size: 6px;
+    line-height: 1;
+    margin-top: 3px;
+    letter-spacing: 0.2px;
+  }
+} 

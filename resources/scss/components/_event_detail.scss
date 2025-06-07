@@ -1,0 +1,1085 @@
+// Event Detail Page Styles
+
+.event-detail-page {
+  background-color: $dark-bg;
+  color: $text-light;
+}
+
+// Event Hero Section
+.event-hero-section {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 5rem 0;
+  overflow: hidden;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+    min-height: auto;
+  }
+  
+  .hero-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%);
+    z-index: 1;
+  }
+  
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .event-hero-content {
+    .event-date {
+      display: inline-block;
+      background: $theme-red;
+      color: $text-light;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    
+    .event-title {
+      font-family: $font-family-heading;
+      font-size: 4rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      
+      @media (max-width: 991px) {
+        font-size: 3rem;
+      }
+      
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+      
+      @media (max-width: 480px) {
+        font-size: 2rem;
+      }
+    }
+    
+    .event-tagline {
+      font-size: 1.5rem;
+      color: $text-light;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      max-width: 800px;
+      
+      @media (max-width: 768px) {
+        font-size: 1.25rem;
+      }
+    }
+    
+    .event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      
+      .meta-item {
+        display: flex;
+        align-items: center;
+        
+        i {
+          color: $theme-red;
+          margin-right: 0.5rem;
+          font-size: 1.1rem;
+        }
+        
+        .meta-label {
+          color: $text-gray;
+          font-size: 0.9rem;
+          display: block;
+        }
+        
+        .meta-value {
+          color: $text-light;
+          font-weight: 500;
+          display: block;
+        }
+      }
+    }
+    
+    .event-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      
+      .btn {
+        padding: 0.875rem 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: $transition-fast;
+        border-radius: 0;
+        font-size: 0.875rem;
+        
+        i {
+          margin-right: 0.5rem;
+        }
+        
+        &.btn-primary {
+          background-color: $theme-red;
+          border-color: $theme-red;
+          color: $text-light;
+          
+          &:hover {
+            background-color: darken($theme-red, 10%);
+            border-color: darken($theme-red, 10%);
+            transform: translateY(-2px);
+          }
+        }
+        
+        &.btn-outline-light {
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          background-color: transparent;
+          color: $text-light;
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+  
+  .event-poster {
+    text-align: center;
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 5px solid $theme-red;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+// Fight Card Section
+.fight-card-section {
+  padding: 5rem 0;
+  background: $darker-bg;
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    
+    .section-title {
+      font-family: $font-family-heading;
+      font-size: 3rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: $text-light;
+      margin-bottom: 0.5rem;
+      
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+    }
+    
+    .section-subtitle {
+      color: $text-gray;
+      font-size: 1.25rem;
+      
+      @media (max-width: 768px) {
+        font-size: 1.125rem;
+      }
+    }
+  }
+}
+
+// Main Event Card
+.main-event-card {
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+  
+  &:before {
+    content: 'MAIN EVENT';
+    position: absolute;
+    top: 1.5rem;
+    right: -3rem;
+    background: $theme-red;
+    color: $text-light;
+    padding: 0.25rem 2.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transform: rotate(45deg);
+  }
+  
+  .main-event-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+    .event-title-info {
+      margin-bottom: 2rem;
+      
+      .championship-title {
+        color: $theme-red;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 1.25rem;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .weight-class {
+        color: $text-gray;
+        font-size: 1rem;
+        text-transform: uppercase;
+      }
+    }
+  }
+  
+  .fighters-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .fighter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 40%;
+      
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+      
+      .fighter-image {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        border: 3px solid $theme-red;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      .fighter-info {
+        .fighter-name {
+          font-family: $font-family-heading;
+          font-size: 2rem;
+          font-weight: 700;
+          color: $text-light;
+          text-transform: uppercase;
+          margin-bottom: 0.5rem;
+          
+          @media (max-width: 768px) {
+            font-size: 1.75rem;
+          }
+        }
+        
+        .fighter-record {
+          font-size: 1.125rem;
+          color: $text-gray;
+          margin-bottom: 0.5rem;
+        }
+        
+        .fighter-country {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          
+          .country-flag {
+            width: 24px;
+            height: auto;
+          }
+          
+          .country-name {
+            color: $text-gray;
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+    
+    .vs-badge {
+      width: 60px;
+      height: 60px;
+      background: $theme-red;
+      color: $text-light;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      box-shadow: 0 0 0 5px rgba(220, 53, 69, 0.3);
+      
+      @media (max-width: 768px) {
+        margin: 1rem 0;
+      }
+    }
+  }
+  
+  .fight-details {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    
+    .detail {
+      text-align: center;
+      
+      .detail-label {
+        color: $text-gray;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+      }
+      
+      .detail-value {
+        color: $text-light;
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Undercard Bouts
+.undercard-bouts {
+  margin-top: 3rem;
+}
+
+.bout-card {
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  .bout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    .bout-type {
+      color: $theme-red;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .weight-class {
+      color: $text-gray;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+    }
+  }
+  
+  .bout-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .fighter {
+      display: flex;
+      align-items: center;
+      
+      @media (max-width: 576px) {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      
+      &.fighter-right {
+        flex-direction: row-reverse;
+        text-align: right;
+        
+        .fighter-image {
+          margin-right: 0;
+          margin-left: 1rem;
+        }
+        
+        @media (max-width: 576px) {
+          flex-direction: row;
+          text-align: left;
+          
+          .fighter-image {
+            margin-right: 1rem;
+            margin-left: 0;
+          }
+        }
+      }
+      
+      .fighter-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 1rem;
+        border: 2px solid $theme-red;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      .fighter-info {
+        .fighter-name {
+          font-weight: 600;
+          color: $text-light;
+          font-size: 1rem;
+          margin-bottom: 0.25rem;
+        }
+        
+        .fighter-record {
+          color: $text-gray;
+          font-size: 0.875rem;
+        }
+      }
+    }
+    
+    .vs-badge {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-light;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  }
+  
+  .bout-footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    
+    .bout-detail {
+      font-size: 0.875rem;
+      color: $text-gray;
+      
+      span {
+        color: $text-light;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Event Media Section
+.event-media-section {
+  padding: 5rem 0;
+  background: $dark-bg;
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .media-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    
+    .media-tab {
+      color: $text-gray;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding-bottom: 0.5rem;
+      position: relative;
+      cursor: pointer;
+      transition: $transition-fast;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: $theme-red;
+        transition: width 0.3s ease;
+      }
+      
+      &:hover {
+        color: $text-light;
+      }
+      
+      &.active {
+        color: $text-light;
+        
+        &:after {
+          width: 100%;
+        }
+      }
+    }
+  }
+  
+  .media-content {
+    .media-pane {
+      display: none;
+      
+      &.active {
+        display: block;
+      }
+    }
+  }
+}
+
+// Photos Gallery
+.photos-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  
+  .gallery-item {
+    position: relative;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+    cursor: pointer;
+    
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    &:hover {
+      img {
+        transform: scale(1.05);
+      }
+      
+      .gallery-item-overlay {
+        opacity: 1;
+      }
+    }
+    
+    .gallery-item-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      
+      i {
+        color: $text-light;
+        font-size: 2rem;
+      }
+    }
+  }
+}
+
+// Video Grid
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+  
+  .video-card {
+    background: #1c1c1c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:hover {
+      .video-thumbnail {
+        .play-overlay {
+          opacity: 1;
+          
+          .play-button {
+            transform: scale(1);
+          }
+        }
+      }
+    }
+    
+    .video-thumbnail {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-top: 56.25%; // 16:9 aspect ratio
+      overflow: hidden;
+      
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .play-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: $transition-base;
+        
+        .play-button {
+          width: 65px;
+          height: 65px;
+          background: $theme-red;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transform: scale(0.8);
+          transition: $transition-base;
+          
+          i {
+            color: $text-light;
+            font-size: 1.5rem;
+            margin-left: 3px;
+          }
+        }
+      }
+    }
+    
+    .video-content {
+      padding: 1.25rem;
+      
+      .video-date {
+        color: $text-gray;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .video-title {
+        font-family: $font-family-heading;
+        color: $text-light;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      
+      .video-description {
+        color: $text-gray;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// Event Results Section
+.event-results-section {
+  padding: 5rem 0;
+  background: $darker-bg;
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    thead {
+      th {
+        background: rgba(255, 255, 255, 0.05);
+        color: $text-light;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+    
+    tbody {
+      tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        td {
+          padding: 1rem;
+          color: $text-light;
+          font-size: 0.9rem;
+          
+          &.bout-type {
+            color: $theme-red;
+            font-weight: 600;
+            text-transform: uppercase;
+          }
+          
+          .result-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            
+            &.win {
+              background: $theme-green-dark;
+              color: $text-light;
+            }
+            
+            &.loss {
+              background: $theme-red-dark;
+              color: $text-light;
+            }
+            
+            &.draw {
+              background: $theme-orange-dark;
+              color: $text-light;
+            }
+            
+            &.no-contest {
+              background: $theme-gray-dark;
+              color: $text-light;
+            }
+          }
+          
+          .fighter-name {
+            font-weight: 600;
+            
+            &.winner {
+              color: $theme-green;
+            }
+          }
+        }
+      }
+    }
+    
+    @media (max-width: 768px) {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+}
+
+// Event Related News Section
+.related-news-section {
+  padding: 5rem 0;
+  background: $dark-bg;
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .section-title {
+      font-family: $font-family-heading;
+      font-size: 3rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: $text-light;
+      margin: 0;
+      
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+    }
+    
+    .view-all-link {
+      color: $theme-red;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: $transition-fast;
+      
+      &:hover {
+        color: darken($theme-red, 10%);
+      }
+    }
+  }
+  
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Event Stream Section
+.event-stream-section {
+  padding: 5rem 0;
+  background: $darkest-bg;
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .stream-container {
+    background: #1c1c1c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    
+    .stream-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      
+      .status-badge {
+        background: $theme-red;
+        color: $text-light;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: inline-flex;
+        align-items: center;
+        
+        i {
+          margin-right: 0.5rem;
+        }
+        
+        &.upcoming {
+          background: $theme-blue;
+        }
+        
+        &.live {
+          background: $theme-red;
+          
+          .dot {
+            width: 10px;
+            height: 10px;
+            background: $text-light;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            position: relative;
+            display: inline-block;
+            
+            &:before {
+              content: '';
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              background: inherit;
+              border-radius: inherit;
+              animation: pulse 1.5s ease-out infinite;
+            }
+          }
+        }
+        
+        &.ended {
+          background: $theme-gray;
+        }
+      }
+    }
+    
+    .video-player-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; // 16:9 aspect ratio
+      margin-bottom: 2rem;
+      background: #000;
+      
+      iframe, video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .player-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        
+        .overlay-icon {
+          font-size: 3rem;
+          color: $theme-red;
+          margin-bottom: 1.5rem;
+        }
+        
+        .overlay-title {
+          font-size: 1.5rem;
+          color: $text-light;
+          font-weight: 700;
+          margin-bottom: 1rem;
+        }
+        
+        .overlay-text {
+          color: $text-gray;
+          font-size: 1rem;
+          max-width: 500px;
+          margin: 0 auto 1.5rem;
+        }
+        
+        .btn {
+          padding: 0.875rem 1.5rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          transition: $transition-fast;
+          background: $theme-red;
+          color: $text-light;
+          border: none;
+          font-size: 0.9rem;
+          
+          &:hover {
+            background: darken($theme-red, 10%);
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+    
+    .stream-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      
+      .info-item {
+        text-align: center;
+        
+        .info-label {
+          color: $text-gray;
+          font-size: 0.875rem;
+          text-transform: uppercase;
+          margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+          color: $text-light;
+          font-size: 1.125rem;
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .stream-cta {
+      text-align: center;
+      
+      .btn {
+        padding: 1rem 2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: $transition-fast;
+        background: $theme-red;
+        color: $text-light;
+        border: none;
+        font-size: 1rem;
+        
+        i {
+          margin-right: 0.5rem;
+        }
+        
+        &:hover {
+          background: darken($theme-red, 10%);
+          transform: translateY(-2px);
+        }
+      }
+      
+      .price-info {
+        color: $text-gray;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}
+
+// Keyframes
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+} 

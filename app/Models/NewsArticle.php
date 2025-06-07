@@ -2,293 +2,182 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class NewsArticle extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'title',
         'slug',
-        'category',
-        'author_id',
         'excerpt',
         'content',
         'featured_image',
-        'gallery',
-        'video_url',
-        'tags',
+        'user_id',
+        'status',
         'published_at',
         'is_featured',
-        'is_breaking',
-        'views',
+        'is_main_article',
+        'allow_comments',
+        'views_count',
+        'comments_count',
         'meta_title',
         'meta_description',
         'meta_keywords',
-        'social_title',
-        'social_description',
-        'social_image',
-        'auto_post_social',
-        'social_platforms',
+        'reading_time',
+        'seo_data',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
         'is_featured' => 'boolean',
-        'is_breaking' => 'boolean',
-        'views' => 'integer',
-        'gallery' => 'array',
-        'tags' => 'array',
-        'meta_keywords' => 'array',
-        'social_platforms' => 'array',
-        'auto_post_social' => 'boolean',
+        'is_main_article' => 'boolean',
+        'allow_comments' => 'boolean',
+        'views_count' => 'integer',
+        'comments_count' => 'integer',
+        'reading_time' => 'integer',
+        'seo_data' => 'json',
     ];
 
-    protected $appends = [
-        'reading_time',
-        'featured_image_url',
-        'social_image_url',
-    ];
-
-    /**
-     * Get the author of the article
-     */
-    public function author()
+    protected static function boot()
     {
-        return $this->belongsTo(User::class, 'author_id');
-    }
+        parent::boot();
 
-    /**
-     * Get fighters mentioned in the article
-     */
-    public function fighters()
-    {
-        return $this->belongsToMany(Fighter::class, 'news_article_fighter');
-    }
+        static::creating(function ($article) {
+            if (empty($article->slug)) {
+                $article->slug = Str::slug($article->title);
+            }
+            if (empty($article->reading_time)) {
+                $article->reading_time = self::calculateReadingTime($article->content);
+            }
+        });
 
-    /**
-     * Get events mentioned in the article
-     */
-    public function events()
-    {
-        return $this->belongsToMany(Event::class, 'news_article_event');
-    }
-
-    /**
-     * Get related articles
-     */
-    public function relatedArticles()
-    {
-        return $this->belongsToMany(
-            NewsArticle::class,
-            'news_article_related',
-            'news_article_id',
-            'related_article_id'
-        );
-    }
-
-    /**
-     * Get the URL for featured image
-     */
-    public function getFeaturedImageUrlAttribute()
-    {
-        if (!$this->featured_image) {
-            return asset('images/news-placeholder.jpg');
-        }
+        static::updating(function ($article) {
+            if ($article->isDirty('title') && empty($article->slug)) {
+                $article->slug = Str::slug($article->title);
+            }
+            if ($article->isDirty('content')) {
+                $article->reading_time = self::calculateReadingTime($article->content);
+            }
+            
+            // Handle main article setting
+            if ($article->isDirty('is_main_article') && $article->is_main_article) {
+                // Set all other articles to not be main
+                static::where('id', '!=', $article->id)
+                    ->where('is_main_article', true)
+                    ->update(['is_main_article' => false]);
+                
+                // Ensure the article is also featured
+                if (!$article->is_featured) {
+                    $article->is_featured = true;
+                }
+            }
+        });
         
-        return Storage::url($this->featured_image);
+        static::saved(function ($article) {
+            // If this is a newly created article and it's set as main
+            if ($article->is_main_article) {
+                // Double-check to ensure no other articles are set as main
+                static::where('id', '!=', $article->id)
+                    ->where('is_main_article', true)
+                    ->update(['is_main_article' => false]);
+            }
+        });
     }
 
-    /**
-     * Get the URL for social image
-     */
-    public function getSocialImageUrlAttribute()
+    protected static function calculateReadingTime($content)
     {
-        if (!$this->social_image) {
-            return $this->featured_image_url;
-        }
-        
-        return Storage::url($this->social_image);
+        $wordCount = str_word_count(strip_tags($content));
+        return ceil($wordCount / 200); // Assuming 200 words per minute
     }
 
-    /**
-     * Calculate estimated reading time
-     */
-    public function getReadingTimeAttribute()
+    public function user()
     {
-        $wordCount = str_word_count(strip_tags($this->content));
-        $readingTime = ceil($wordCount / 200); // Assuming 200 words per minute reading speed
-        
-        return $readingTime;
+        return $this->belongsTo(User::class);
     }
 
-    /**
-     * Scope published articles
-     */
+    public function categories()
+    {
+        return $this->belongsToMany(NewsCategory::class, 'news_article_category');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(NewsTag::class, 'news_article_tag');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(NewsComment::class, 'news_id')->where('status', 'approved')->whereNull('parent_id');
+    }
+
+    public function allComments()
+    {
+        return $this->hasMany(NewsComment::class, 'news_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function scopePublished($query)
     {
-        return $query->where('published_at', '<=', now())
-            ->whereNotNull('published_at');
+        return $query->where('status', 'published')
+                    ->where('published_at', '<=', now());
     }
 
-    /**
-     * Scope unpublished/draft articles
-     */
-    public function scopeDraft($query)
-    {
-        return $query->whereNull('published_at')
-            ->orWhere('published_at', '>', now());
-    }
-
-    /**
-     * Scope featured articles
-     */
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
     }
 
-    /**
-     * Scope breaking news
-     */
-    public function scopeBreaking($query)
+    public function scopeRecent($query)
     {
-        return $query->where('is_breaking', true);
+        return $query->orderBy('published_at', 'desc');
     }
 
-    /**
-     * Scope articles by category
-     */
-    public function scopeByCategory($query, $category)
+    public function scopePopular($query)
     {
-        return $query->where('category', $category);
+        return $query->orderBy('views_count', 'desc');
     }
 
-    /**
-     * Scope articles with a specific tag
-     */
-    public function scopeWithTag($query, $tag)
+    public function scopeMainArticle($query)
     {
-        return $query->where('tags', 'like', "%$tag%");
+        return $query->where('is_main_article', true);
     }
 
-    /**
-     * Scope popular articles
-     */
-    public function scopePopular($query, $limit = null)
+    public function getExcerptAttribute($value)
     {
-        $query = $query->orderBy('views', 'desc');
-        
-        if ($limit) {
-            $query->limit($limit);
+        if ($value) {
+            return $value;
         }
-        
-        return $query;
+        return Str::limit(strip_tags($this->content), 160);
     }
 
-    /**
-     * Scope recent articles
-     */
-    public function scopeRecent($query, $limit = null)
-    {
-        $query = $query->orderBy('published_at', 'desc');
-        
-        if ($limit) {
-            $query->limit($limit);
-        }
-        
-        return $query;
-    }
-
-    /**
-     * Scope articles related to a fighter
-     */
-    public function scopeRelatedToFighter($query, $fighterId)
-    {
-        return $query->whereHas('fighters', function ($query) use ($fighterId) {
-            $query->where('fighter_id', $fighterId);
-        });
-    }
-
-    /**
-     * Scope articles related to an event
-     */
-    public function scopeRelatedToEvent($query, $eventId)
-    {
-        return $query->whereHas('events', function ($query) use ($eventId) {
-            $query->where('event_id', $eventId);
-        });
-    }
-
-    /**
-     * Increment view count
-     */
     public function incrementViews()
     {
-        $this->increment('views');
-        return $this->views;
+        $this->increment('views_count');
     }
 
-    /**
-     * Get formatted publication date
-     */
-    public function getFormattedDateAttribute()
+    public function updateCommentsCount()
     {
-        return $this->published_at->format('F j, Y');
+        $this->update([
+            'comments_count' => $this->allComments()->where('status', 'approved')->count()
+        ]);
     }
 
-    /**
-     * Check if article is published
-     */
-    public function isPublished()
+    public function getFormattedPublishedAtAttribute()
     {
-        return $this->published_at && $this->published_at <= now();
+        return $this->published_at ? $this->published_at->format('F j, Y') : null;
     }
 
-    /**
-     * Check if article is scheduled for future publication
-     */
-    public function isScheduled()
+    public function getReadingTimeTextAttribute()
     {
-        return $this->published_at && $this->published_at > now();
-    }
-
-    /**
-     * Get article URL
-     */
-    public function getUrl()
-    {
-        return url("/news/{$this->slug}");
-    }
-
-    /**
-     * Find similar articles based on tags
-     */
-    public function findSimilarArticles($limit = 5)
-    {
-        if (empty($this->tags)) {
-            return NewsArticle::published()
-                ->where('id', '!=', $this->id)
-                ->where('category', $this->category)
-                ->limit($limit)
-                ->latest('published_at')
-                ->get();
-        }
-        
-        return NewsArticle::published()
-            ->where('id', '!=', $this->id)
-            ->where(function ($query) {
-                foreach ($this->tags as $tag) {
-                    $query->orWhere('tags', 'like', "%$tag%");
-                }
-            })
-            ->limit($limit)
-            ->latest('published_at')
-            ->get();
+        return $this->reading_time . ' min read';
     }
 }

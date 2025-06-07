@@ -1,0 +1,9 @@
+/* Bootstrap 5 CSS */
+@import 'bootstrap/scss/bootstrap';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* Custom SCSS variables and styles will go here */

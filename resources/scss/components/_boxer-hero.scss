@@ -1,0 +1,462 @@
+// Boxer Hero Section Styles
+
+.boxer-hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: $text-light;
+  overflow: hidden;
+  
+  // Dark overlay for better text readability
+  .hero-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $hero-overlay-bg;
+    z-index: 1;
+  }
+  
+  // Ensure content is above overlay
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  // Boxer image styling
+  .boxer-hero-image {
+    .boxer-image {
+      max-width: $fighter-image-max-width;
+      width: 100%;
+      height: auto;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow-dark-xl;
+      transition: $transition-base;
+      
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+      }
+    }
+  }
+  
+  // Hero content styling
+  .boxer-hero-content {
+    padding: 8rem 0 2rem;
+    
+    .ranking-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+    }
+    
+    .boxer-status {
+      .status-badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        background: linear-gradient(135deg, $theme-blue, $theme-blue-dark);
+        color: $text-light;
+        border-radius: $border-radius;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        box-shadow: $shadow-dark;
+        white-space: nowrap;
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: $shadow-dark-lg;
+        }
+      }
+    }
+    
+    .boxer-ranking {
+      display: flex;
+      align-items: center;
+      color: $text-light;
+      font-size: 1.125rem;
+      font-weight: 500;
+      flex-grow: 1;
+      
+      i {
+        color: $theme-orange;
+        font-size: 1.2rem;
+      }
+      
+      .ranking-text {
+        font-weight: 600;
+        
+        small {
+          font-weight: 400;
+          font-size: 0.9rem;
+          color: $text-gray !important;
+          margin-left: 0.5rem;
+        }
+      }
+    }
+    
+    .boxer-titles {
+      .title-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        border-radius: $border-radius;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: $transition-base;
+        line-height: 1.4;
+        word-wrap: break-word;
+        max-width: 100%;
+        
+        // Allow text to wrap naturally
+        white-space: normal;
+        word-break: break-word;
+        hyphens: auto;
+        
+        &.champion {
+          background: linear-gradient(135deg, $theme-red, $theme-red-dark);
+          color: $text-light;
+          box-shadow: $shadow-dark;
+          
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-dark-lg;
+          }
+        }
+        
+        &.contender {
+          background: linear-gradient(135deg, $theme-orange, $theme-orange-dark);
+          color: $text-light;
+          box-shadow: $shadow-dark;
+          
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-dark-lg;
+          }
+        }
+      }
+    }
+    
+    .boxer-name {
+      font-family: $font-family-heading;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      line-height: 1.1;
+      margin: 1rem 0 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    
+    .boxer-weight-class {
+      font-family: $font-family-display;
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      font-weight: 600;
+      color: $theme-red;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .boxer-record {
+      display: flex;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+      
+      .record-item {
+        text-align: center;
+        min-width: 70px;
+        
+        strong {
+          display: block;
+          font-family: $font-family-heading;
+          font-size: 1.75rem;
+          font-weight: 400;
+          color: $theme-red;
+          line-height: 1;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        span {
+          font-size: 0.8rem;
+          color: $text-gray;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .boxer-details-list {
+      p {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        color: $text-light;
+        
+        strong {
+          color: $theme-red;
+          font-weight: 600;
+        }
+      }
+    }
+    
+    // New Performance Stats Design
+    .boxer-performance-stats {
+      .performance-stat-card {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: $border-radius-lg;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        transition: $transition-base;
+        backdrop-filter: blur(15px);
+        position: relative;
+        overflow: hidden;
+        
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, $theme-red, $theme-orange);
+          opacity: 0;
+          transition: $transition-base;
+        }
+        
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: $shadow-dark-lg;
+          border-color: rgba(255, 255, 255, 0.3);
+          
+          &:before {
+            opacity: 1;
+          }
+          
+          .stat-icon i {
+            transform: scale(1.1);
+          }
+        }
+        
+        .stat-icon {
+          width: 50px;
+          height: 50px;
+          background: linear-gradient(135deg, $theme-red, $theme-red-light);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 1rem;
+          box-shadow: 0 4px 15px rgba($theme-red, 0.3);
+          
+          i {
+            font-size: 1.2rem;
+            color: $text-light;
+            transition: $transition-base;
+          }
+        }
+        
+        .stat-content {
+          margin-bottom: 1rem;
+          
+          .stat-number {
+            font-family: $font-family-heading;
+            font-size: 2rem;
+            font-weight: 400;
+            color: $text-light;
+            line-height: 1;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            margin-bottom: 0.25rem;
+          }
+          
+          .stat-label {
+            font-size: 0.875rem;
+            color: $text-gray;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+          }
+        }
+        
+        .stat-progress {
+          height: 4px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 2px;
+          overflow: hidden;
+          
+          .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, $theme-red, $theme-orange);
+            border-radius: 2px;
+            transition: width 1s ease;
+            box-shadow: 0 0 10px rgba($theme-red, 0.5);
+          }
+        }
+      }
+    }
+    
+    // Deprecated old performance stats - keeping for compatibility
+    .boxer-stats-performance {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: $border-radius-lg;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      
+      .performance-stat {
+        text-align: center;
+        
+        .stat-number {
+          font-family: $font-family-heading;
+          font-size: 2rem;
+          font-weight: 400;
+          color: $theme-red;
+          line-height: 1;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        .stat-label {
+          font-size: 0.875rem;
+          color: $text-gray;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 500;
+          margin-top: 0.25rem;
+        }
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    min-height: 100vh;
+    text-align: center;
+    
+    .container {
+      .row {
+        // Reorder elements on mobile for better layout
+        display: flex;
+        flex-direction: column;
+        
+        .col-lg-5 {
+          order: 2; // Move image after content
+          margin-top: 2rem; // Add space between content and image
+        }
+        
+        .col-lg-7 {
+          order: 1; // Move content first
+        }
+      }
+    }
+    
+    .boxer-hero-content {
+      padding: 7rem 0 1rem;
+      
+      .ranking-status-row {
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .boxer-titles {
+        text-align: center;
+        margin-bottom: 2rem; // More space after titles for image
+        
+        .title-badge {
+          margin: 0.25rem 0.125rem;
+          font-size: 0.8rem;
+        }
+      }
+      
+      .boxer-record {
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+    
+    .boxer-hero-image {
+      margin-bottom: 0; // Remove bottom margin since image is now after content
+      margin-top: 1rem; // Add top margin to separate from content
+      
+      .boxer-image {
+        max-width: 280px;
+      }
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .boxer-hero-content {
+      padding: 6rem 0 1rem;
+      
+      .boxer-titles {
+        margin-bottom: 1.5rem;
+        
+        .title-badge {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.75rem;
+          margin: 0.2rem 0.1rem;
+          max-width: calc(100vw - 2rem);
+        }
+      }
+      
+      .boxer-name {
+        font-size: 2rem;
+        margin: 1rem 0 0.5rem;
+      }
+      
+      .boxer-weight-class {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      
+      .boxer-record {
+        gap: 0.75rem;
+        margin: 1.5rem 0;
+        
+        .record-item {
+          min-width: 60px;
+          
+          strong {
+            font-size: 1.5rem;
+          }
+        }
+      }
+      
+      .boxer-stats-performance {
+        padding: 1rem;
+        
+        .performance-stat {
+          .stat-number {
+            font-size: 1.5rem;
+          }
+        }
+      }
+    }
+    
+    .boxer-hero-image {
+      margin-top: 0.5rem; // Reduce margin on very small screens
+      
+      .boxer-image {
+        max-width: 250px; // Slightly smaller on very small screens
+      }
+    }
+  }
+} 

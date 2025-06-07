@@ -1,0 +1,237 @@
+// Fight History Component Styles
+
+.fight-history-section {
+  background: #1c1c1c;
+  color: $text-light;
+  padding: 4rem 0 5rem;
+  
+  .section-title {
+    font-size: 3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    color: white;
+    
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+.fight-history-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fight-history-table {
+  width: 100%;
+  background: transparent;
+  color: white;
+  margin-bottom: 2rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  thead {
+    tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      
+      th {
+        text-align: left;
+        padding: 1rem 0.5rem;
+        font-weight: 500;
+        color: #ccc;
+        font-size: 1rem;
+        text-transform: none;
+        border: none;
+        
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      
+      td {
+        padding: 0.9rem 0.5rem;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+}
+
+.result-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  
+  &.win {
+    background-color: #0d6efd; // Bootstrap blue
+    color: white;
+  }
+  
+  &.loss {
+    background-color: $theme-red;
+    color: white;
+  }
+  
+  &.draw {
+    background-color: $theme-gray;
+    color: white;
+  }
+}
+
+.record-display {
+  font-weight: 600;
+  color: $text-light;
+}
+
+.opponent-name {
+  font-weight: 600;
+  color: $text-light;
+  
+  &:hover {
+    color: $theme-red;
+    cursor: pointer;
+  }
+}
+
+.method-badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: $border-radius;
+  font-size: 0.8rem;
+  font-weight: 500;
+  
+  &.tko, &.ko {
+    background: rgba(226, 37, 44, 0.2);
+    border-color: $theme-red;
+    color: $theme-red;
+  }
+  
+  &.ud, &.md, &.sd {
+    background: rgba(22, 168, 70, 0.2);
+    border-color: $theme-green;
+    color: $theme-green;
+  }
+}
+
+.notes-cell {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  
+  .title-tag {
+    display: inline-block;
+    background: $theme-red;
+    color: $text-light;
+    padding: 0.2rem 0.5rem;
+    border-radius: $border-radius-sm;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+    font-style: normal;
+  }
+}
+
+.show-more-container {
+  margin-top: 1rem;
+  text-align: center;
+  
+  .show-more-btn {
+    background-color: #303030;
+    border: none;
+    color: white;
+    padding: 0.75rem 2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: $transition-base;
+    
+    &:hover {
+      background-color: #3e3e3e;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 992px) {
+  .fight-history-table {
+    thead th,
+    tbody td {
+      padding: 0.75rem 0.4rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .fight-history-section {
+    padding: 3rem 0 4rem;
+  }
+  
+  .fight-history-table {
+    thead th,
+    tbody td {
+      padding: 0.6rem 0.3rem;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    
+    thead th:nth-child(7),
+    thead th:nth-child(8),
+    tbody td:nth-child(7),
+    tbody td:nth-child(8) {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .fight-history-table {
+    thead th:nth-child(6),
+    tbody td:nth-child(6) {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .fight-history-section {
+    padding: 2.5rem 0 3.5rem;
+  }
+  
+  .fight-history-table {
+    thead th,
+    tbody td {
+      padding: 0.5rem 0.25rem;
+      font-size: 0.75rem;
+    }
+    
+    thead th:nth-child(4),
+    tbody td:nth-child(4) {
+      display: none;
+    }
+  }
+  
+  .show-more-btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.8rem;
+  }
+} 

@@ -1,0 +1,394 @@
+// Event Listing Page Styles
+
+.events-listing-section {
+  background: $dark-bg;
+  color: $text-light;
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+  
+  .bg-text {
+    position: absolute;
+    font-family: $font-family-heading;
+    font-size: 20rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.04);
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    z-index: 1;
+    user-select: none;
+    pointer-events: none;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    
+    @media (max-width: 1200px) {
+      font-size: 15rem;
+    }
+    
+    @media (max-width: 768px) {
+      font-size: 10rem;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 7rem;
+    }
+  }
+  
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .section-title {
+    font-family: $font-family-heading;
+    font-size: 3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $text-light;
+    margin: 0;
+    letter-spacing: 1.5px;
+    
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
+  }
+  
+  .section-subtitle {
+    color: $text-gray;
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.125rem;
+    }
+  }
+  
+  // Tab Styles
+  .event-tabs {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    
+    .event-tab {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      transition: $transition-fast;
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 0.25rem;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: $theme-red;
+        transition: width 0.3s ease;
+      }
+      
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+      }
+      
+      &.active {
+        color: #fff;
+        
+        &:after {
+          width: 100%;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  // Events Grid
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Event Card Component
+.event-card {
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: $transition-base;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    
+    .event-image img {
+      transform: scale(1.05);
+    }
+  }
+  
+  .event-status {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    
+    .status-badge {
+      background: $theme-red;
+      color: $text-light;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      
+      &.upcoming {
+        background: $theme-green;
+      }
+      
+      &.ongoing {
+        background: $theme-orange;
+      }
+      
+      &.completed {
+        background: $theme-gray;
+      }
+    }
+  }
+  
+  .event-image {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%; // 16:9 aspect ratio
+    overflow: hidden;
+    
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .event-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+      z-index: 1;
+    }
+  }
+  
+  .event-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    
+    .event-date {
+      color: $theme-red;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .event-title {
+      font-family: $font-family-heading;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.3;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      color: $text-light;
+      
+      a {
+        color: inherit;
+        text-decoration: none;
+        transition: $transition-fast;
+        
+        &:hover {
+          color: $theme-red;
+        }
+      }
+    }
+    
+    .event-location {
+      color: $text-light;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      
+      i {
+        color: $text-gray;
+        margin-right: 0.5rem;
+      }
+    }
+    
+    .event-network {
+      color: $text-gray;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      
+      i {
+        margin-right: 0.5rem;
+      }
+    }
+    
+    .main-event {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      
+      .main-event-title {
+        font-size: 0.8rem;
+        color: $text-gray;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .fighters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .fighter {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          
+          .fighter-name {
+            font-weight: 600;
+            color: $text-light;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+          }
+          
+          .fighter-record {
+            color: $text-gray;
+            font-size: 0.8rem;
+          }
+        }
+        
+        .vs {
+          color: $theme-red;
+          font-weight: 700;
+          padding: 0 0.5rem;
+        }
+      }
+    }
+  }
+  
+  .event-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .ticket-price {
+      font-size: 0.9rem;
+      
+      .price {
+        font-weight: 700;
+        color: $text-light;
+      }
+      
+      .from {
+        color: $text-gray;
+        font-size: 0.8rem;
+      }
+    }
+    
+    .event-action {
+      .btn {
+        padding: 0.5rem 1rem;
+        background: $theme-red;
+        color: $text-light;
+        border: none;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: $transition-fast;
+        text-decoration: none;
+        
+        &:hover {
+          background: darken($theme-red, 10%);
+          transform: translateY(-2px);
+        }
+        
+        &.btn-outline {
+          background: transparent;
+          border: 1px solid $theme-red;
+          color: $theme-red;
+          
+          &:hover {
+            background: $theme-red;
+            color: $text-light;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  padding: 3rem;
+  text-align: center;
+  border-radius: $border-radius;
+  
+  .empty-icon {
+    font-size: 3rem;
+    color: $text-gray;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-title {
+    font-size: 1.5rem;
+    color: $text-light;
+    margin-bottom: 0.5rem;
+  }
+  
+  .empty-description {
+    color: $text-gray;
+    max-width: 400px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+  }
+} 

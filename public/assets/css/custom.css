@@ -1,0 +1,767 @@
+/* Hero Slider Dark Overlay CSS */
+
+/* Add dark overlay to f-slider-three (main hero slider) */
+.f-slider-three .owl-item {
+    position: relative;
+}
+
+.f-slider-three .owl-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.272) 0%,
+        rgba(0, 0, 0, 0.197) 50%,
+        rgba(0, 0, 0, 0.321) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Ensure the hero content appears above the overlay */
+.f-slider-three .hero-three {
+    position: relative;
+    z-index: 2;
+}
+
+/* Make text more prominent with better contrast for f-slider-three */
+.f-slider-three .hero-three h1,
+.f-slider-three .hero-three p,
+.f-slider-three .hero-three span {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    color: #ffffff !important;
+}
+
+/* Enhance button visibility for f-slider-three */
+.f-slider-three .hero-three .theme-btn {
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Add dark overlay to featured slider one */
+.featured-slider-one .owl-item {
+    position: relative;
+}
+
+.featured-slider-one .owl-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Ensure the text content appears above the overlay */
+.featured-slider-one .f-slider-one-data {
+    position: relative;
+    z-index: 2;
+}
+
+/* Make text more prominent with better contrast */
+.featured-slider-one .f-slider-one-data h1,
+.featured-slider-one .f-slider-one-data p,
+.featured-slider-one .f-slider-one-data span {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    color: #ffffff !important;
+}
+
+/* Enhance button visibility */
+.featured-slider-one .f-slider-one-data .theme-btn {
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Add dark overlay to featured slider two if it exists */
+.featured-slider-two .owl-item {
+    position: relative;
+}
+
+.featured-slider-two .owl-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Ensure the text content appears above the overlay for slider two */
+.featured-slider-two .featured-text-two {
+    position: relative;
+    z-index: 2;
+}
+
+/* Make text more prominent for slider two */
+.featured-slider-two .featured-text-two h1,
+.featured-slider-two .featured-text-two p {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    color: #ffffff !important;
+}
+
+/* Enhance button visibility for slider two */
+.featured-slider-two .featured-text-two .theme-btn {
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Add dark overlay to myslider if it exists */
+.myslider .owl-item {
+    position: relative;
+}
+
+.myslider .owl-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Ensure any text content in myslider appears above the overlay */
+.myslider .featured-text-two {
+    position: relative;
+    z-index: 2;
+}
+
+/* Generic hero/banner overlay for other sliders */
+.hero-slider .owl-item,
+.banner-slider .owl-item,
+.main-slider .owl-item {
+    position: relative;
+}
+
+.hero-slider .owl-item::before,
+.banner-slider .owl-item::before,
+.main-slider .owl-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Ensure proper z-index for slider navigation elements */
+.f-slider-three .owl-dots,
+.featured-slider-one .owl-dots,
+.featured-slider-two .owl-dots,
+.myslider .owl-dots {
+    position: relative;
+    z-index: 3;
+}
+
+.f-slider-three .owl-nav,
+.featured-slider-one .owl-nav,
+.featured-slider-two .owl-nav,
+.myslider .owl-nav {
+    position: relative;
+    z-index: 3;
+}
+
+/* Hover effect to slightly reduce overlay on hover */
+.f-slider-three .owl-item:hover::before,
+.featured-slider-one .owl-item:hover::before,
+.featured-slider-two .owl-item:hover::before,
+.myslider .owl-item:hover::before {
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.5) 0%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+}
+
+/* Dynamic dark overlay styles (added via JavaScript) */
+.dark-overlay {
+    content: "";
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    ) !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Hover effect for dynamic overlay */
+.owl-item:hover .dark-overlay {
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.5) 0%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.6) 100%
+    ) !important;
+}
+
+/* Universal text enhancement for any slider with overlay */
+.has-dark-overlay .owl-item h1,
+.has-dark-overlay .owl-item h2,
+.has-dark-overlay .owl-item h3,
+.has-dark-overlay .owl-item p,
+.has-dark-overlay .owl-item span {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+    color: #ffffff !important;
+}
+
+/* Universal button enhancement for any slider with overlay */
+.has-dark-overlay .theme-btn,
+.has-dark-overlay .btn {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .f-slider-three .owl-item::before,
+    .featured-slider-one .owl-item::before,
+    .featured-slider-two .owl-item::before,
+    .myslider .owl-item::before,
+    .dark-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.7) 0%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0.8) 100%
+        ) !important;
+    }
+    
+    .f-slider-three .hero-three h1,
+    .f-slider-three .hero-three p,
+    .featured-slider-one .f-slider-one-data h1,
+    .featured-slider-one .f-slider-one-data p,
+    .featured-slider-two .featured-text-two h1,
+    .featured-slider-two .featured-text-two p,
+    .has-dark-overlay .owl-item h1,
+    .has-dark-overlay .owl-item h2,
+    .has-dark-overlay .owl-item h3,
+    .has-dark-overlay .owl-item p {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9) !important;
+    }
+}
+
+/* DARK THEME UNIVERSAL OVERRIDES - ADD AT END */
+/* Force dark theme on all elements that might have white backgrounds */
+html, body {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Universal section and container dark theme */
+section, .gap, .section, .blog-style-two, .blog-style-one, .blog-style-three {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Blog section specific fixes */
+.blog-style-two {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+    padding: 80px 0 !important;
+}
+
+.blog-style-two .heading {
+    color: #ffffff !important;
+}
+
+.blog-style-two .heading h2 {
+    color: #ffffff !important;
+}
+
+.blog-style-two .heading span {
+    color: #dc3545 !important;
+}
+
+.blog-style-two .blog-item {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    height: 450px !important; /* Fixed height for uniformity */
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.blog-style-two .blog-item figure {
+    height: 200px !important; /* Fixed image container height */
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+}
+
+.blog-style-two .blog-item figure img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.blog-style-two .blog-item .blog-text {
+    padding: 20px !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.blog-style-two .blog-item h2 {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    margin-bottom: 15px !important;
+}
+
+.blog-style-two .blog-item h2,
+.blog-style-two .blog-item h2 a {
+    color: #ffffff !important;
+    font-size: 1.1rem !important;
+    line-height: 1.3 !important;
+}
+
+.blog-style-two .blog-item p {
+    color: #cccccc !important;
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 10px !important;
+}
+
+.blog-style-two .blog-item .blog-date {
+    color: #ffffff !important;
+    font-size: 0.85rem !important;
+    margin-top: auto !important;
+}
+
+.blog-style-two .blog-item .category {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    padding: 5px 12px !important;
+    border-radius: 3px !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+}
+
+/* HOMEPAGE SECTION BACKGROUND VARIATIONS FOR VISUAL SEPARATION */
+
+/* Hero Section - Darkest */
+.hero-section,
+.hero-section-three,
+section:first-child {
+    background-color: #0a0a0a !important;
+    position: relative !important;
+}
+
+/* Featured News Section - Medium Dark */
+.featured-news {
+    background-color: #161616 !important;
+    color: #ffffff !important;
+    position: relative !important;
+}
+
+/* Event Section - Darker variation */
+.events-section {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    position: relative !important;
+}
+
+/* Event cards specific styling */
+.events-section .event-item-row {
+    background-color: #1a1a1a !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+}
+
+.events-section .event-item-row:hover {
+    background-color: #1f1f1f !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Video Wall Section - Medium variation */
+.video-wall-section {
+    background-color: #141414 !important;
+    color: #ffffff !important;
+    position: relative !important;
+}
+
+.video-wall-section .video-item {
+    background-color: #1c1c1c !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+.video-wall-section .video-item:hover {
+    background-color: #202020 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Blog Section - Lightest dark variation */
+.blog-style-two {
+    background-color: #0f0f0f !important;
+    color: #ffffff !important;
+    position: relative !important;
+}
+
+/* Add subtle separators between sections */
+section:not(:first-child):before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 1px !important;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.03) 50%,
+        transparent 100%
+    ) !important;
+    z-index: 1 !important;
+}
+
+/* Ensure proper spacing and visual hierarchy */
+.gap {
+    position: relative !important;
+}
+
+section.gap {
+    padding: 80px 0 !important;
+}
+
+/* Video wall container improvements */
+.video-wall-container {
+    background-color: transparent !important;
+}
+
+/* Ensure event cards maintain proper styling */
+.event-details-container {
+    background-color: transparent !important;
+}
+
+.event-info {
+    color: inherit !important;
+}
+
+.event-name {
+    color: #dc3545 !important;
+}
+
+.event-venue,
+.event-network {
+    color: #cccccc !important;
+}
+
+/* Override any remaining white backgrounds */
+.bg-white,
+.bg-light,
+.background-white {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Container and wrapper fixes */
+.container,
+.container-fluid,
+.row {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+.page-wrapper,
+.main-content {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* EXCEPTION: Background text should remain subtle/transparent */
+.bg-text,
+.events-section .bg-text,
+.video-wall-section .bg-text,
+.events-listing-section .bg-text {
+    color: rgba(255, 255, 255, 0.04) !important;
+    font-family: 'Anton', sans-serif !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    position: absolute !important;
+    font-size: 20rem !important;
+    top: 15% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    white-space: nowrap !important;
+    z-index: 1 !important;
+    user-select: none !important;
+    pointer-events: none !important;
+    line-height: 1 !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* Responsive bg-text sizing */
+@media (max-width: 1200px) {
+    .bg-text,
+    .events-section .bg-text,
+    .video-wall-section .bg-text,
+    .events-listing-section .bg-text {
+        font-size: 15rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .bg-text,
+    .events-section .bg-text,
+    .video-wall-section .bg-text,
+    .events-listing-section .bg-text {
+        font-size: 10rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .bg-text,
+    .events-section .bg-text,
+    .video-wall-section .bg-text,
+    .events-listing-section .bg-text {
+        font-size: 7rem !important;
+    }
+}
+
+/* Responsive adjustments for section backgrounds */
+@media (max-width: 768px) {
+    section.gap {
+        padding: 60px 0 !important;
+    }
+    
+    .blog-style-two .blog-item {
+        height: 420px !important;
+    }
+    
+    .blog-style-two .blog-item figure {
+        height: 180px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-style-two .blog-item {
+        height: 400px !important;
+    }
+    
+    .blog-style-two .blog-item figure {
+        height: 160px !important;
+    }
+}
+
+/* Text color universal fixes (but exclude .bg-text) */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+p:not(.bg-text), span:not(.bg-text), div:not(.owl-dots):not(.owl-nav):not(.bg-text) {
+    color: inherit !important;
+}
+
+.text-dark {
+    color: #ffffff !important;
+}
+
+.text-black {
+    color: #ffffff !important;
+}
+
+/* Card and content boxes */
+.card,
+.box,
+.content-box {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Navigation and header specific fixes */
+.navbar,
+.header {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #dc3545 !important;
+}
+
+/* Footer */
+footer,
+.footer {
+    background-color: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+/* Form elements */
+input, textarea, select {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #999999 !important;
+}
+
+/* Modal and dropdown fixes */
+.modal-content,
+.dropdown-menu {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Specific fixes for show.blade.php header issues */
+.show-page .navbar,
+.show-page .header {
+    position: fixed !important;
+    top: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
+}
+
+.show-page .main-content {
+    margin-top: 80px !important;
+}
+
+/* Responsive dark theme fixes */
+@media (max-width: 768px) {
+    section, .gap, .blog-style-two {
+        padding: 60px 0 !important;
+    }
+    
+    .blog-style-two .heading h2 {
+        font-size: 2rem !important;
+    }
+}
+
+/* Animation and transition preservation */
+.blog-item:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure all list items maintain dark theme */
+ul, ol, li {
+    color: inherit !important;
+}
+
+/* Table fixes */
+table {
+    background-color: transparent !important;
+    color: #ffffff !important;
+}
+
+th, td {
+    color: inherit !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Pagination fixes */
+.pagination .page-link {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.pagination .page-link:hover {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+/* Additional safety overrides */
+* {
+    scrollbar-color: #dc3545 #2a2a2a !important;
+}
+
+::-webkit-scrollbar {
+    background-color: #2a2a2a !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #dc3545 !important;
+}
+
+/* Final override for any stubborn white backgrounds */
+body > *,
+.page-wrapper > *,
+section > *,
+.container > *,
+.row > * {
+    background-color: transparent !important;
+}
+
+/* Force all sections to be dark */
+section:not(.hero-section):not(.hero-section-three) {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Emergency override for any remaining white elements */
+[style*="background-color: white"],
+[style*="background: white"],
+[style*="background-color: #fff"],
+[style*="background: #fff"],
+[style*="background-color: #ffffff"],
+[style*="background: #ffffff"] {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+} 

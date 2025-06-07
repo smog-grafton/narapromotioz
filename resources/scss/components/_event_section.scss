@@ -1,0 +1,448 @@
+// Event Section Component Styles
+
+.events-section {
+  background: $dark-bg;
+  color: $text-light;
+  padding: 4rem 0;
+  position: relative;
+  overflow: hidden;
+  
+  .bg-text {
+    position: absolute;
+    font-family: $font-family-heading;
+    font-size: 20rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.04);
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    z-index: 1;
+    user-select: none;
+    pointer-events: none;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    
+    @media (max-width: 1200px) {
+      font-size: 15rem;
+    }
+    
+    @media (max-width: 768px) {
+      font-size: 10rem;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 7rem;
+    }
+  }
+  
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .section-title {
+    font-family: $font-family-heading;
+    font-size: 3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $text-light;
+    margin: 0;
+    letter-spacing: 1.5px;
+    
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
+  }
+  
+  // Tab Styles
+  .event-tabs {
+    display: flex;
+    gap: 1.5rem;
+    
+    .event-tab {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      transition: $transition-fast;
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 0.25rem;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: $theme-red;
+        transition: width 0.3s ease;
+      }
+      
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+      }
+      
+      &.active {
+        color: #fff;
+        
+        &:after {
+          width: 100%;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  // Tab Content Styles
+  .event-tab-content {
+    display: none;
+    
+    &.active {
+      display: block;
+    }
+  }
+}
+
+// Desktop Events Layout
+.desktop-events {
+  .event-item-row {
+    background: #1c1c1c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+    margin-bottom: 2rem;
+    transition: $transition-base;
+    overflow: hidden;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .event-image-container {
+    padding-right: 0;
+    
+    .event-image {
+      width: 100%;
+      height: 275px;
+      object-fit: cover;
+      border-radius: 0;
+    }
+  }
+  
+  .event-details-container {
+    padding: 1.5rem;
+  }
+  
+  .event-info {
+    .event-date {
+      font-size: 0.9rem;
+      color: $text-gray;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+    
+    .event-name {
+      font-family: $font-family-heading;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #dc3545; // Red color to match screenshot
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      margin-bottom: 0.75rem;
+      line-height: 1;
+      
+      @media (max-width: 991px) {
+        font-size: 1.75rem;
+      }
+    }
+    
+    .event-venue {
+      font-size: 0.9rem;
+      color: $text-light;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      
+      i {
+        color: $text-gray;
+        width: 16px;
+        margin-right: 5px;
+      }
+    }
+    
+    .event-network {
+      font-size: 0.9rem;
+      color: $text-light;
+      font-weight: 400;
+    }
+  }
+  
+  .event-actions {
+    margin-top: auto;
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 0;
+      transition: $transition-fast;
+      text-decoration: none;
+      border: none;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      
+      i {
+        font-size: 0.9em;
+        margin-right: 6px;
+      }
+    }
+    
+    .btn-event-primary {
+      background-color: transparent;
+      color: $text-light;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      padding-left: 2.25rem;
+      
+      i {
+        position: absolute;
+        left: 1rem;
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $text-light;
+      }
+    }
+    
+    .btn-event-secondary {
+      background-color: rgba(100, 100, 100, 0.5);
+      color: $text-light;
+      
+      &:hover {
+        background-color: rgba(100, 100, 100, 0.7);
+        color: $text-light;
+      }
+    }
+  }
+}
+
+// Mobile Events Layout
+.mobile-events {
+  margin-bottom: 1rem;
+  
+  .event-card {
+    margin-bottom: 1.5rem;
+    background: #1c1c1c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .event-card-image {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%; // 16:9 aspect ratio
+    overflow: hidden;
+    
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .event-card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+    }
+    
+    .event-card-content {
+      .event-name {
+        font-family: $font-family-heading;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #dc3545; // Red color to match screenshot
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        line-height: 1;
+        
+        @media (max-width: 480px) {
+          font-size: 1.5rem;
+        }
+      }
+      
+      .event-date {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+      }
+      
+      .event-venue {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        
+        i {
+          color: rgba(255, 255, 255, 0.6);
+          width: 16px;
+          margin-right: 5px;
+        }
+      }
+      
+      .event-network {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 400;
+      }
+    }
+  }
+  
+  .event-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0;
+    padding: 1rem;
+    
+    .btn {
+      padding: 0.75rem 0;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 0;
+      transition: $transition-fast;
+      text-decoration: none;
+      border: none;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      
+      i {
+        font-size: 0.9em;
+        margin-right: 6px;
+      }
+    }
+    
+    .btn-event-primary {
+      background-color: transparent;
+      color: $text-light;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      
+      i {
+        margin-right: 8px;
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $text-light;
+      }
+    }
+    
+    .btn-event-secondary {
+      background-color: rgba(100, 100, 100, 0.5);
+      color: $text-light;
+      
+      &:hover {
+        background-color: rgba(100, 100, 100, 0.7);
+        color: $text-light;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 991px) and (min-width: 768px) {
+  .desktop-events {
+    .event-item-row {
+      .event-image-container {
+        .event-image {
+          height: 160px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .events-section {
+    padding: 3rem 0;
+    
+    .event-tabs {
+      gap: 1rem;
+    }
+  }
+  
+  .mobile-events {
+    .event-card-image {
+      padding-bottom: 65%; // Taller aspect ratio for mobile
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .events-section {
+    padding: 2.5rem 0;
+    
+    .event-tabs {
+      gap: 0.75rem;
+    }
+  }
+  
+  .mobile-events {
+    .event-card-image {
+      padding-bottom: 75%; // Even taller aspect ratio for small mobile
+      
+      .event-card-overlay {
+        padding: 1.25rem;
+      }
+    }
+  }
+} 
