@@ -55,8 +55,9 @@ class NewsCategoryResource extends Resource
                             ->default('#6c757d')
                             ->required(),
                         Forms\Components\TextInput::make('icon')
-                            ->placeholder('fa-dumbbell')
-                            ->helperText('FontAwesome icon class (e.g., fa-dumbbell)')
+                            ->label('Icon')
+                            ->placeholder('fas fa-boxing-glove')
+                            ->helperText('Enter FontAwesome icon class (e.g., fas fa-boxing-glove, fas fa-trophy, fas fa-calendar)')
                             ->maxLength(255),
                     ])->columns(2),
                     
@@ -89,8 +90,9 @@ class NewsCategoryResource extends Resource
                     ->copyMessage('Copied!')
                     ->color('gray'),
                 Tables\Columns\TextColumn::make('icon')
-                    ->icon(fn ($record) => $record->icon)
-                    ->placeholder('—'),
+                    ->formatStateUsing(fn ($state) => $state ? "<i class='{$state}'></i>" : '—')
+                    ->html()
+                    ->label('Icon'),
                 Tables\Columns\TextColumn::make('articles_count')
                     ->counts('articles')
                     ->label('Articles')

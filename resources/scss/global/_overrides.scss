@@ -203,23 +203,6 @@
   }
 }
 
-// Breadcrumb overrides
-.breadcrumb {
-  .breadcrumb-item {
-    a {
-      color: $theme-red;
-      text-decoration: none;
-      
-      &:hover {
-        color: $theme-red-lighter;
-      }
-    }
-    
-    &.active {
-      color: $text-light;
-    }
-  }
-}
 
 // Pagination overrides
 .pagination {

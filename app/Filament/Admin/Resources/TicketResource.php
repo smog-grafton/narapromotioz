@@ -18,6 +18,12 @@ class TicketResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
+    protected static ?string $navigationLabel = 'Ticket Templates';
+    
+    protected static ?string $modelLabel = 'Ticket Template';
+    
+    protected static ?string $pluralModelLabel = 'Ticket Templates';
+
     protected static ?string $navigationGroup = 'Ticketing';
 
     protected static ?int $navigationSort = 1;
@@ -28,80 +34,75 @@ class TicketResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Ticket Information')
+                Forms\Components\Section::make('Template Information')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Select::make('event_id')
-                            ->relationship('event', 'name')
-                            ->required()
-                            ->searchable()
-                            ->preload(),
-                        Forms\Components\TextInput::make('price')
-                            ->required()
-                            ->numeric()
-                            ->prefix('$'),
-                        Forms\Components\TextInput::make('quantity_available')
-                            ->required()
-                            ->numeric()
-                            ->minValue(1),
-                        Forms\Components\TextInput::make('max_per_purchase')
-                            ->numeric()
-                            ->minValue(1)
-                            ->default(10),
-                    ])
-                    ->columns(2),
-
-                Forms\Components\Section::make('Ticket Details')
-                    ->schema([
-                        Forms\Components\Select::make('ticket_type')
-                            ->options([
-                                'general' => 'General Admission',
-                                'vip' => 'VIP',
-                                'ringside' => 'Ringside',
-                                'premium' => 'Premium',
-                                'early_bird' => 'Early Bird',
-                                'group' => 'Group Package',
-                            ])
-                            ->required(),
-                        Forms\Components\DateTimePicker::make('sale_starts_at')
-                            ->required(),
-                        Forms\Components\DateTimePicker::make('sale_ends_at')
-                            ->required()
-                            ->after('sale_starts_at'),
                         Forms\Components\Textarea::make('description')
                             ->maxLength(1000)
                             ->columnSpanFull(),
                     ])
-                    ->columns(2),
+                    ->columns(1),
 
-                Forms\Components\Section::make('Ticket Design')
+                Forms\Components\Section::make('Template Design')
                     ->schema([
-                        Forms\Components\FileUpload::make('template_image')
+                        Forms\Components\FileUpload::make('image_path')
+                            ->label('Template Image')
                             ->image()
                             ->directory('tickets/templates')
                             ->maxSize(5120),
-                        Forms\Components\ColorPicker::make('background_color')
-                            ->default('#FFFFFF'),
-                        Forms\Components\ColorPicker::make('text_color')
-                            ->default('#000000'),
-                        Forms\Components\Toggle::make('include_qr_code')
-                            ->default(true),
-                        Forms\Components\Toggle::make('include_event_logo')
-                            ->default(true),
+                        Forms\Components\TextInput::make('width')
+                            ->numeric()
+                            ->default(800)
+                            ->required(),
+                        Forms\Components\TextInput::make('height')
+                            ->numeric()
+                            ->default(350)
+                            ->required(),
+                        Forms\Components\Select::make('ticket_type')
+                            ->options([
+                                'regular' => 'Regular',
+                                'vip' => 'VIP',
+                                'premium' => 'Premium',
+                                'general' => 'General Admission',
+                                'ringside' => 'Ringside',
+                                'early_bird' => 'Early Bird',
+                                'group' => 'Group Package',
+                            ])
+                            ->default('regular')
+                            ->required(),
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('QR Code Settings')
+                    ->schema([
+                        Forms\Components\KeyValue::make('qr_code_position')
+                            ->label('QR Code Position')
+                            ->keyLabel('Property')
+                            ->valueLabel('Value')
+                            ->default([
+                                'x' => '0',
+                                'y' => '0',
+                                'width' => '150',
+                                'height' => '150'
+                            ]),
+                        Forms\Components\KeyValue::make('text_fields')
+                            ->label('Text Fields Configuration')
+                            ->keyLabel('Field Name')
+                            ->valueLabel('Configuration'),
+                    ])
+                    ->columns(1),
 
                 Forms\Components\Section::make('Status')
                     ->schema([
                         Forms\Components\Toggle::make('is_active')
                             ->label('Active')
-                            ->helperText('Only active tickets can be purchased')
+                            ->helperText('Only active templates can be used')
                             ->default(true),
-                        Forms\Components\Toggle::make('is_featured')
-                            ->label('Featured')
-                            ->helperText('Featured tickets will be highlighted on the event page')
+                        Forms\Components\Toggle::make('is_default')
+                            ->label('Default Template')
+                            ->helperText('This will be the default template for this ticket type')
                             ->default(false),
                     ])
                     ->columns(2),
@@ -113,57 +114,55 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('event.name')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->money('USD')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ticket_type')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quantity_available')
-                    ->numeric()
+                Tables\Columns\ImageColumn::make('image_path')
+                    ->label('Template Image')
+                    ->circular()
+                    ->size(40),
+                Tables\Columns\TextColumn::make('width')
+                    ->label('Width (px)')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tickets_sold')
-                    ->getStateUsing(fn ($record) => $record->purchases()->count())
-                    ->label('Tickets Sold'),
-                Tables\Columns\TextColumn::make('sale_starts_at')
-                    ->dateTime()
+                Tables\Columns\TextColumn::make('height')
+                    ->label('Height (px)')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('sale_ends_at')
-                    ->dateTime()
+                Tables\Columns\TextColumn::make('tickets_count')
+                    ->counts('tickets')
+                    ->label('Tickets Using Template')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('is_default')
+                    ->boolean()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Created By')
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('event_id')
-                    ->relationship('event', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->label('Event'),
                 Tables\Filters\SelectFilter::make('ticket_type')
                     ->options([
-                        'general' => 'General Admission',
+                        'regular' => 'Regular',
                         'vip' => 'VIP',
-                        'ringside' => 'Ringside',
                         'premium' => 'Premium',
+                        'general' => 'General Admission',
+                        'ringside' => 'Ringside',
                         'early_bird' => 'Early Bird',
                         'group' => 'Group Package',
                     ]),
-                Tables\Filters\Filter::make('on_sale')
-                    ->query(fn (Builder $query): Builder => $query
-                        ->where('sale_starts_at', '<=', now())
-                        ->where('sale_ends_at', '>=', now())
-                        ->where('is_active', true)
-                    )
-                    ->label('Currently On Sale'),
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Active'),
             ])

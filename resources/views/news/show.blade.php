@@ -14,12 +14,12 @@
 @section('content')
 <!-- Banner Style One Start -->
 <section class="banner-style-one">
-    <div class="parallax" style="background-image: url({{ asset('assets/images/bg-banner.jpg') }});"></div>
+    <div class="parallax" style="background-image: url({{ asset('assets/images/banner/news_oagebanner.jpg') }});"></div>
     <div class="container">
         <div class="row">
             <div class="banner-details">
-                <h2>Blog Detail</h2>
-                <p>our values and vaulted us to the top of our industry.</p>
+                <h2>{{ Str::length($article->title) > 50 ? Str::limit($article->title, 47, '.......') : $article->title }}</h2>
+                <p>Read the latest boxing news, fight analysis, and exclusive content from Uganda's premier boxing scene.</p>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
                     </li>
                     <li>
                         <a href="{{ route('news.index') }}">
-                            <p>Blog</p>
+                            <p>Boxing News</p>
                         </a>
                     </li>
                     <li class="current">

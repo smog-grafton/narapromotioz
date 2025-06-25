@@ -60,10 +60,10 @@
                 </table>
             </div>
             
-            @if($event->meta_data && isset(json_decode($event->meta_data, true)['result_notes']))
+            @if($event->meta_data && isset($event->meta_data['result_notes']))
                 <div class="result-notes mt-4">
                     <h4>Notes</h4>
-                    <p>{{ json_decode($event->meta_data, true)['result_notes'] }}</p>
+                    <p>{{ $event->meta_data['result_notes'] }}</p>
                 </div>
             @endif
         @elseif($isPastEvent)

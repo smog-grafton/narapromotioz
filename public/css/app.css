@@ -4928,16 +4928,6 @@ section.dark-section {
   color: #212529 !important;
 }
 
-.breadcrumb .breadcrumb-item a {
-  color: #dc3545;
-  text-decoration: none;
-}
-.breadcrumb .breadcrumb-item a:hover {
-  color: #ff6b6f;
-}
-.breadcrumb .breadcrumb-item.active {
-  color: #ffffff;
-}
 
 .pagination .page-link {
   border: none;
@@ -5054,25 +5044,7 @@ section.dark-section {
   padding: 2rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-.page-title-section .page-title-content .breadcrumb {
-  background: transparent;
-  padding: 0;
-  margin-bottom: 1rem;
-}
-.page-title-section .page-title-content .breadcrumb .breadcrumb-item a {
-  color: #adb5bd;
-  text-decoration: none;
-  transition: all 0.2s ease-in-out;
-}
-.page-title-section .page-title-content .breadcrumb .breadcrumb-item a:hover {
-  color: #dc3545;
-}
-.page-title-section .page-title-content .breadcrumb .breadcrumb-item.active {
-  color: #ffffff;
-}
-.page-title-section .page-title-content .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
-  color: #adb5bd;
-}
+
 .page-title-section .page-title-content .page-title {
   font-family: "Anton", sans-serif;
   font-size: 2.5rem;

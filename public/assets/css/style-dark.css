@@ -300,7 +300,10 @@ body.light-d .first .tab-data .map-pin .location .data p
 body.light-d header.header-style-one.two div .slideDown,
 body.light-d .contact-us .c-cards .card{
     background-color: black;
- }
+}
+body.light-d .mobile-nav{
+    background-color: black !important;
+}
 body.light-d .history-style-one,body.light-d .cta-section {
     background-color: black;
     z-index: 0;

@@ -120,6 +120,11 @@ class NewsArticle extends Model
         return $this->hasMany(NewsComment::class, 'news_id');
     }
 
+    public function events()
+    {
+        return $this->belongsToMany(BoxingEvent::class, 'boxing_event_news_article', 'news_article_id', 'boxing_event_id');
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';

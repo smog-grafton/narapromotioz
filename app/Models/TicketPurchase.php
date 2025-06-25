@@ -56,11 +56,19 @@ class TicketPurchase extends Model
     }
 
     /**
-     * Get the event associated with this purchase
+     * Get the event associated with this purchase (through ticket)
      */
     public function event()
     {
-        return $this->ticket->event;
+        return $this->hasOneThrough(BoxingEvent::class, EventTicket::class, 'id', 'id', 'event_ticket_id', 'boxing_event_id');
+    }
+
+    /**
+     * Get the boxing event directly through the ticket relationship
+     */
+    public function boxingEvent()
+    {
+        return $this->hasOneThrough(BoxingEvent::class, EventTicket::class, 'id', 'id', 'event_ticket_id', 'boxing_event_id');
     }
 
     /**

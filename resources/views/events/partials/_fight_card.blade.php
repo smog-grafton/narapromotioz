@@ -27,7 +27,7 @@
                             <!-- Fighter 1 -->
                             <div class="fighter">
                                 <div class="fighter-image">
-                                    <img src="{{ $mainEvent->boxer->image_path ? asset($mainEvent->boxer->image_path) : asset('assets/images/boxers/default.jpg') }}" alt="{{ $mainEvent->boxer->name }}">
+                                    <img src="{{ asset($mainEvent->boxer->thumbnail) }}" alt="{{ $mainEvent->boxer->name }}">
                                 </div>
                                 <div class="fighter-info">
                                     <h3 class="fighter-name">{{ $mainEvent->boxer->name }}</h3>
@@ -45,7 +45,7 @@
                             <!-- Fighter 2 -->
                             <div class="fighter">
                                 <div class="fighter-image">
-                                    <img src="{{ $mainEvent->opponent->image_path ? asset($mainEvent->opponent->image_path) : asset('assets/images/boxers/default.jpg') }}" alt="{{ $mainEvent->opponent->name }}">
+                                    <img src="{{ asset($mainEvent->opponent->thumbnail) }}" alt="{{ $mainEvent->opponent->name }}">
                                 </div>
                                 <div class="fighter-info">
                                     <h3 class="fighter-name">{{ $mainEvent->opponent->name }}</h3>
@@ -102,7 +102,7 @@
                                 <!-- Fighter 1 -->
                                 <div class="fighter">
                                     <div class="fighter-image">
-                                        <img src="{{ $bout->boxer->image_path ? asset($bout->boxer->image_path) : asset('assets/images/boxers/default.jpg') }}" alt="{{ $bout->boxer->name }}">
+                                        <img src="{{ asset($bout->boxer->thumbnail) }}" alt="{{ $bout->boxer->name }}">
                                     </div>
                                     <div class="fighter-info">
                                         <div class="fighter-name">{{ $bout->boxer->name }}</div>
@@ -116,7 +116,7 @@
                                 <!-- Fighter 2 -->
                                 <div class="fighter fighter-right">
                                     <div class="fighter-image">
-                                        <img src="{{ $bout->opponent->image_path ? asset($bout->opponent->image_path) : asset('assets/images/boxers/default.jpg') }}" alt="{{ $bout->opponent->name }}">
+                                        <img src="{{ asset($bout->opponent->thumbnail) }}" alt="{{ $bout->opponent->name }}">
                                     </div>
                                     <div class="fighter-info">
                                         <div class="fighter-name">{{ $bout->opponent->name }}</div>

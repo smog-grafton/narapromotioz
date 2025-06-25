@@ -34,38 +34,40 @@ class BoxerResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Basic Information')
                     ->schema([
-                        Forms\Components\TextInput::make('first_name')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('last_name')
+                        Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('nickname')
                             ->maxLength(255),
-                        Forms\Components\DatePicker::make('date_of_birth')
-                            ->required(),
-                        Forms\Components\Select::make('gender')
-                            ->options([
-                                'male' => 'Male',
-                                'female' => 'Female',
-                                'other' => 'Other',
-                            ])
-                            ->required(),
-                        Forms\Components\TextInput::make('nationality')
-                            ->maxLength(255),
                         Forms\Components\TextInput::make('weight_class')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('age')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('height')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('reach')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('stance')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('hometown')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('country')
                             ->maxLength(255),
                     ])
                     ->columns(2),
 
                 Forms\Components\Section::make('Profile')
                     ->schema([
-                        Forms\Components\FileUpload::make('profile_image')
+                        Forms\Components\FileUpload::make('image_path')
+                            ->label('Profile Image')
                             ->image()
                             ->directory('boxers/profile-images')
                             ->maxSize(5120)
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('bio')
+                            ->maxLength(65535)
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('full_bio')
                             ->maxLength(65535)
                             ->columnSpanFull(),
                     ]),
@@ -84,40 +86,43 @@ class BoxerResource extends Resource
                         Forms\Components\TextInput::make('knockouts')
                             ->numeric()
                             ->default(0),
+                        Forms\Components\TextInput::make('kos_lost')
+                            ->label('KOs Lost')
+                            ->numeric()
+                            ->default(0),
+                        Forms\Components\TextInput::make('years_pro')
+                            ->label('Years Professional')
+                            ->numeric()
+                            ->default(0),
                     ])
-                    ->columns(4),
+                    ->columns(3),
 
-                Forms\Components\Section::make('Contact Information')
+                Forms\Components\Section::make('Career Information')
                     ->schema([
-                        Forms\Components\TextInput::make('email')
-                            ->email()
+                        Forms\Components\TextInput::make('status')
+                            ->default('Professional')
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('phone')
-                            ->tel()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('manager_name')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('manager_contact')
-                            ->maxLength(255),
+                        Forms\Components\TextInput::make('global_ranking')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('total_fighters_in_division')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('career_start')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('career_end')
+                            ->numeric(),
+                        Forms\Components\DatePicker::make('debut_date'),
                     ])
                     ->columns(2),
 
-                Forms\Components\Section::make('Social Media')
+                Forms\Components\Section::make('Titles')
                     ->schema([
-                        Forms\Components\TextInput::make('instagram')
-                            ->prefix('@')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('twitter')
-                            ->prefix('@')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('facebook')
-                            ->url()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('youtube')
-                            ->url()
-                            ->maxLength(255),
-                    ])
-                    ->columns(2),
+                        Forms\Components\TagsInput::make('titles')
+                            ->separator(',')
+                            ->placeholder('Add titles (e.g. WBC Champion, IBF Champion)')
+                            ->default([])
+                            ->dehydrateStateUsing(fn ($state) => $state ?? [])
+                            ->columnSpanFull(),
+                    ]),
 
                 Forms\Components\Section::make('Status')
                     ->schema([
@@ -136,10 +141,11 @@ class BoxerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('profile_image')
+                Tables\Columns\ImageColumn::make('image_path')
+                    ->label('Image')
                     ->circular(),
-                Tables\Columns\TextColumn::make('full_name')
-                    ->searchable(['first_name', 'last_name']),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nickname')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('weight_class')
@@ -147,6 +153,8 @@ class BoxerResource extends Resource
                 Tables\Columns\TextColumn::make('record')
                     ->label('Record (W-L-D)')
                     ->formatStateUsing(fn (Boxer $record): string => "{$record->wins}-{$record->losses}-{$record->draws}"),
+                Tables\Columns\TextColumn::make('global_ranking')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('is_featured')

@@ -14,9 +14,9 @@
         <div class="media-content">
             <!-- Photos Tab Content -->
             <div id="photos-content" class="media-pane active">
-                @if(isset($event->meta_data) && is_array(json_decode($event->meta_data, true)) && isset(json_decode($event->meta_data, true)['gallery']))
+                @if(isset($event->meta_data) && is_array($event->meta_data) && isset($event->meta_data['gallery']))
                     @php
-                        $gallery = json_decode($event->meta_data, true)['gallery'] ?? [];
+                        $gallery = $event->meta_data['gallery'] ?? [];
                     @endphp
                     
                     @if(count($gallery) > 0)
@@ -57,7 +57,7 @@
                         @foreach($videos as $video)
                             <div class="video-card" data-video-url="{{ $video->video_url }}">
                                 <div class="video-thumbnail">
-                                    <img src="{{ asset($video->thumbnail_path ?: 'assets/images/videos/default-thumbnail.jpg') }}" alt="{{ $video->title }}">
+                                    <img src="{{ asset($video->getThumbnailPathAttribute()) }}" alt="{{ $video->title }}">
                                     <div class="play-overlay">
                                         <div class="play-button">
                                             <i class="fas fa-play"></i>

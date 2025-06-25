@@ -11,19 +11,18 @@
                     </div>
                     <div class="contact-info d-flex-all">
                         <div class="images d-flex-all justify-content-start">
-                            <figure>
-                                <img src="{{ asset('assets/images/profiles/fighter1.jpg') }}" alt="Contact Images">
-                            </figure>
-                            <figure>
-                                <img src="{{ asset('assets/images/profiles/fighter2.jpg') }}" alt="Contact Images">
-                            </figure>
-                            <figure>
-                                <img src="{{ asset('assets/images/profiles/fighter3.jpg') }}" alt="Contact Images">
-                            </figure>
+                            @php
+                                $featuredBoxers = \App\Models\Boxer::whereNotNull('image_path')->limit(3)->get();
+                            @endphp
+                            @foreach($featuredBoxers as $boxer)
+                                <figure>
+                                    <img src="{{ Storage::url($boxer->image_path) }}" alt="{{ $boxer->name }}">
+                                </figure>
+                            @endforeach
                         </div>
-                        <p>expert trainers <span>+1 (251) 344 0 66</span> free call !</p>
+                        <p>Fighters Under Nara Promotionz <span>+256 752 463322</span> free call !</p>
                     </div>
-                    <a href="{{ route('contact') }}" class="theme-btn">Get a Consultation </a>
+                    <a href="{{ route('boxers.index') }}" class="theme-btn">View More</a>
                 </div>
             </div>
         </div>
@@ -33,8 +32,8 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="footer-col">
-                        <h3>Information</h3>
-                        <p>Regular trips to the gym are great, but don't worry if you can't find a large chunk of time to exercise every day.</p>
+                        <h3>About Nara Promotionz</h3>
+                        <p>Nara Promotionz is a premier sports promotion company at the heart of Uganda's professional boxing scene. We are dedicated to elevating the sport of boxing by creating professionally managed, high-octane events that showcase the best talent from Uganda and across the East African region.</p>
                         <ul class="social-media">
                             <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
                             <li><a href="#"><i class="flaticon-twitter"></i></a></li>
@@ -60,6 +59,10 @@
                                 <p><a href="{{ route('boxers.index') }}">Our Boxers</a></p>
                             </li>
                             <li>
+                                <i class="flaticon-play"></i>
+                                <p><a href="{{ route('videos.index') }}">Boxing Videos</a></p>
+                            </li>
+                            <li>
                                 <i class="flaticon-mail"></i>
                                 <p><a href="{{ route('news.index') }}">News & Updates</a></p>
                             </li>
@@ -81,13 +84,31 @@
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="footer-col">
                         <h3>Newsletter</h3>
-                        <p>Signup for our weekly newsletter to get the latest news.</p>
-                        <form>
-                            <input type="email" name="email" placeholder="Enter your email.">
-                            <button>
+                        <p>Signup for our weekly newsletter to get the latest boxing news and event updates.</p>
+                        <form action="{{ route('newsletter.subscribe') }}" method="POST" id="newsletter-form">
+                            @csrf
+                            <input type="email" name="email" placeholder="Enter your email." required>
+                            <button type="submit">
                                 <i class="fa-solid fa-arrow-up-long"></i>
                             </button>
                         </form>
+                        @if(session('success'))
+                            <div class="alert alert-success mt-2">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger mt-2">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        @if(isset($errors) && $errors->any())
+                            <div class="alert alert-danger mt-2">
+                                @foreach($errors->all() as $error)
+                                    <div>{{ $error }}</div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -141,7 +162,7 @@
         <div class="container">
             <div class="row">
                 <div class="footer-col">
-                    <p>{{ config('app.name') }} Center<i class="fa-solid fa-heart"></i> © {{ date('Y') }} <a href="{{ route('home') }}"> {{ config('app.name') }}</a> All rights reserved</p> 
+                    <p>Developed With<i class="fa-solid fa-heart"></i> By smogcoders  © {{ date('Y') }} <a href="{{ route('home') }}"> {{ config('app.name') }}</a> All rights reserved</p> 
                 </div>
             </div>
         </div>

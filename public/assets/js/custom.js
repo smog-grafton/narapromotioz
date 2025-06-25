@@ -744,3 +744,51 @@ $(window).on('resize orientationchange', function() {
         });
     }, 300);
 }); 
+
+/* Newsletter Form Handler */
+$('#newsletter-form').on('submit', function(e) {
+    e.preventDefault();
+    
+    const form = $(this);
+    const submitBtn = form.find('button[type="submit"]');
+    const emailInput = form.find('input[name="email"]');
+    const formData = form.serialize();
+    
+    // Disable submit button
+    submitBtn.prop('disabled', true);
+    submitBtn.html('<i class="fa-solid fa-spinner fa-spin"></i>');
+    
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // Show success message
+                form.after('<div class="alert alert-success mt-2 newsletter-message">' + response.message + '</div>');
+                emailInput.val(''); // Clear the input
+            } else {
+                // Show error message
+                form.after('<div class="alert alert-danger mt-2 newsletter-message">An error occurred. Please try again.</div>');
+            }
+        },
+        error: function(xhr) {
+            let errorMessage = 'An error occurred. Please try again.';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                errorMessage = Object.values(xhr.responseJSON.errors).flat().join(', ');
+            }
+            form.after('<div class="alert alert-danger mt-2 newsletter-message">' + errorMessage + '</div>');
+        },
+        complete: function() {
+            // Re-enable submit button
+            submitBtn.prop('disabled', false);
+            submitBtn.html('<i class="fa-solid fa-arrow-up-long"></i>');
+            
+            // Remove any existing messages
+            $('.newsletter-message').delay(5000).fadeOut();
+        }
+    });
+}); 

@@ -12,7 +12,7 @@
                 <!-- Boxer Image -->
                 <div class="col-lg-5 col-md-6">
                     <div class="boxer-hero-image text-center">
-                        <img src="{{ asset($boxer->image_path) }}" 
+                        <img src="{{ asset($boxer->thumbnail) }}" 
                              alt="{{ $boxer->name }}" 
                              class="img-fluid boxer-image">
                     </div>

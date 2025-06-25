@@ -18,6 +18,13 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\AdminRoleMiddleware;
+use App\Filament\Admin\Widgets\StatsOverview;
+use App\Filament\Admin\Widgets\UsersChart;
+use App\Filament\Admin\Widgets\ContentChart;
+use App\Filament\Admin\Widgets\EventsOverview;
+use App\Filament\Admin\Widgets\TicketSalesChart;
+use App\Filament\Admin\Widgets\LatestContactMessages;
+use App\Filament\Admin\Widgets\LatestBoxers;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -36,8 +43,14 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Custom Dashboard Widgets
+                StatsOverview::class,
+                UsersChart::class,
+                ContentChart::class,
+                EventsOverview::class,
+                TicketSalesChart::class,
+                LatestContactMessages::class,
+                LatestBoxers::class,
             ])
             ->middleware([
                 EncryptCookies::class,

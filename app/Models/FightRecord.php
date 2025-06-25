@@ -25,6 +25,7 @@ class FightRecord extends Model
         'title_fight',
         'weight_class',
         'is_main_event',
+        'order',
         'referee',
         'judges',
         'scorecards',
@@ -52,6 +53,22 @@ class FightRecord extends Model
      * Get the opponent in this fight
      */
     public function opponent()
+    {
+        return $this->belongsTo(Boxer::class, 'opponent_id');
+    }
+
+    /**
+     * Alias for boxer - used in fight card displays
+     */
+    public function boxer1()
+    {
+        return $this->belongsTo(Boxer::class, 'boxer_id');
+    }
+
+    /**
+     * Alias for opponent - used in fight card displays
+     */
+    public function boxer2()
     {
         return $this->belongsTo(Boxer::class, 'opponent_id');
     }

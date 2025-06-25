@@ -25,7 +25,7 @@
       </div>
     </div>
     <img class="sulaiman-musalo-copy" 
-         src="{{ $boxer->image_path ? asset($boxer->getThumbnailAttribute()) : asset('assets/images/boxer-card/sulaiman_musalo_copy.png') }}" 
+         src="{{ $boxer->image_path ? asset($boxer->thumbnail) : asset('assets/images/boxer-card/sulaiman_musalo_copy.png') }}" 
          alt="{{ $boxer->name }}" 
          width="280" 
          height="386">

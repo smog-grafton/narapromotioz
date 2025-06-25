@@ -4,6 +4,8 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\VideoResource\Pages;
 use App\Models\BoxingVideo;
+use App\Models\Boxer;
+use App\Models\BoxingEvent;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -11,6 +13,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Grid;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Illuminate\Support\Str;
 
 class VideoResource extends Resource
 {
@@ -18,9 +26,13 @@ class VideoResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-video-camera';
 
-    protected static ?string $navigationGroup = 'Content Management';
+    protected static ?string $navigationLabel = 'Videos';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?string $pluralModelLabel = 'Videos';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $navigationGroup = 'Content Management';
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -28,89 +40,201 @@ class VideoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Video Information')
+                Section::make('Video Information')
                     ->schema([
-                        Forms\Components\TextInput::make('title')
-                            ->required()
-                            ->maxLength(255),
+                        Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('title')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (string $context, $state, Forms\Set $set) {
+                                        if ($context === 'create') {
+                                            $set('slug', Str::slug($state));
+                                        }
+                                    }),
+
+                                Forms\Components\TextInput::make('slug')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->unique(BoxingVideo::class, 'slug', ignoreRecord: true)
+                                    ->rules(['alpha_dash']),
+                            ]),
+
                         Forms\Components\Textarea::make('description')
-                            ->maxLength(1000)
+                            ->rows(4)
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('duration')
-                            ->maxLength(10)
-                            ->placeholder('MM:SS'),
-                        Forms\Components\Select::make('video_type')
-                            ->options([
-                                'highlight' => 'Highlight',
-                                'full_fight' => 'Full Fight',
-                                'interview' => 'Interview',
-                                'promo' => 'Promotional Video',
-                                'training' => 'Training',
-                                'documentary' => 'Documentary',
-                                'press_conference' => 'Press Conference',
-                                'weigh_in' => 'Weigh-in',
-                                'other' => 'Other',
-                            ])
-                            ->required(),
-                        Forms\Components\Toggle::make('is_premium')
-                            ->label('Premium Content')
-                            ->default(false),
-                        Forms\Components\Toggle::make('is_featured')
-                            ->label('Featured Video')
-                            ->default(false),
-                        Forms\Components\DatePicker::make('publish_date')
-                            ->default(now()),
-                    ])
-                    ->columns(2),
 
-                Forms\Components\Section::make('Video Source')
+                        Grid::make(3)
+                            ->schema([
+                                Forms\Components\Select::make('category')
+                                    ->options([
+                                        'fight' => 'Fight',
+                                        'training' => 'Training',
+                                        'interview' => 'Interview',
+                                        'highlight' => 'Highlight',
+                                        'documentary' => 'Documentary',
+                                        'analysis' => 'Analysis',
+                                        'press_conference' => 'Press Conference',
+                                        'weigh_in' => 'Weigh In',
+                                        'behind_scenes' => 'Behind Scenes',
+                                    ])
+                                    ->searchable(),
+
+                                Forms\Components\Select::make('video_type')
+                                    ->options([
+                                        'youtube' => 'YouTube',
+                                        'vimeo' => 'Vimeo',
+                                        'upload' => 'Upload',
+                                        'embed' => 'Embed',
+                                    ])
+                                    ->required()
+                                    ->default('youtube')
+                                    ->live(),
+
+                                Forms\Components\Select::make('source_type')
+                                    ->options([
+                                        'youtube' => 'YouTube',
+                                        'vimeo' => 'Vimeo',
+                                        'dailymotion' => 'Dailymotion',
+                                        'upload' => 'Upload',
+                                        'external' => 'External',
+                                    ])
+                                    ->default('youtube'),
+                            ]),
+                    ]),
+
+                Section::make('Video Content')
                     ->schema([
-                        Forms\Components\Select::make('source_type')
-                            ->label('Video Source')
-                            ->options([
-                                'youtube' => 'YouTube',
-                                'vimeo' => 'Vimeo',
-                                'uploaded' => 'Uploaded File',
-                                'external' => 'External URL',
-                            ])
-                            ->required()
-                            ->reactive()
-                            ->afterStateUpdated(fn (callable $set) => $set('video_url', null)),
                         Forms\Components\TextInput::make('video_url')
+                            ->url()
                             ->label('Video URL')
-                            ->maxLength(255)
-                            ->visible(fn (callable $get) => in_array($get('source_type'), ['youtube', 'vimeo', 'external']))
-                            ->required(fn (callable $get) => in_array($get('source_type'), ['youtube', 'vimeo', 'external'])),
-                        Forms\Components\FileUpload::make('video_file')
-                            ->label('Upload Video File')
-                            ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
-                            ->directory('videos/uploads')
-                            ->maxSize(512000) // 500MB
-                            ->visible(fn (callable $get) => $get('source_type') === 'uploaded')
-                            ->required(fn (callable $get) => $get('source_type') === 'uploaded'),
-                        Forms\Components\FileUpload::make('thumbnail')
-                            ->image()
-                            ->directory('videos/thumbnails')
-                            ->maxSize(5120),
-                    ])
-                    ->columns(2),
+                            ->placeholder('https://youtube.com/watch?v=...')
+                            ->visible(fn (Forms\Get $get) => in_array($get('video_type'), ['youtube', 'vimeo', 'embed']))
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                if ($state) {
+                                    // Extract video ID from URL
+                                    $videoId = self::extractVideoId($state);
+                                    $set('video_id', $videoId);
+                                }
+                            }),
 
-                Forms\Components\Section::make('Related Content')
+                        Forms\Components\TextInput::make('video_id')
+                            ->label('Video ID')
+                            ->placeholder('dQw4w9WgXcQ')
+                            ->visible(fn (Forms\Get $get) => in_array($get('video_type'), ['youtube', 'vimeo'])),
+
+                        Forms\Components\FileUpload::make('video_file')
+                            ->label('Video File')
+                            ->acceptedFileTypes(['video/mp4', 'video/avi', 'video/mov', 'video/wmv'])
+                            ->directory('videos')
+                            ->visible(fn (Forms\Get $get) => $get('video_type') === 'upload'),
+
+                        Forms\Components\Textarea::make('embed_code')
+                            ->label('Embed Code')
+                            ->rows(6)
+                            ->visible(fn (Forms\Get $get) => $get('video_type') === 'embed'),
+
+                        Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('duration')
+                                    ->placeholder('10:30'),
+
+                                Forms\Components\FileUpload::make('thumbnail')
+                                    ->image()
+                                    ->directory('video-thumbnails')
+                                    ->imageEditor(),
+                            ]),
+                    ]),
+
+                Section::make('Associations')
                     ->schema([
-                        Forms\Components\Select::make('boxer_id')
-                            ->relationship('boxer', 'first_name', function (Builder $query) {
-                                return $query->select('id', 'first_name', 'last_name')
-                                    ->selectRaw("CONCAT(first_name, ' ', last_name) as full_name")
-                                    ->orderBy('full_name');
-                            })
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}")
-                            ->searchable(['first_name', 'last_name']),
-                        Forms\Components\Select::make('event_id')
-                            ->relationship('event', 'name'),
+                        Grid::make(2)
+                            ->schema([
+                                Forms\Components\Select::make('boxer_id')
+                                    ->label('Primary Boxer')
+                                    ->relationship('boxer', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record?->name ?? 'Unknown Boxer'),
+
+                                Forms\Components\Select::make('event_id')
+                                    ->label('Event')
+                                    ->relationship('event', 'title')
+                                    ->searchable()
+                                    ->preload()
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record?->title ?? 'Unknown Event'),
+                            ]),
+
+                        Forms\Components\Select::make('boxers')
+                            ->label('Featured Boxers')
+                            ->relationship('boxers', 'name')
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record?->name ?? 'Unknown Boxer'),
+
+                        Forms\Components\Select::make('events')
+                            ->label('Related Events')
+                            ->relationship('events', 'title')
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record?->title ?? 'Unknown Event'),
+                    ]),
+
+                Section::make('Settings & Metadata')
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                Forms\Components\Select::make('status')
+                                    ->options([
+                                        'draft' => 'Draft',
+                                        'published' => 'Published',
+                                        'archived' => 'Archived',
+                                    ])
+                                    ->default('draft')
+                                    ->required(),
+
+                                Forms\Components\Toggle::make('is_premium')
+                                    ->label('Premium Content'),
+
+                                Forms\Components\Toggle::make('is_featured')
+                                    ->label('Featured Video'),
+                            ]),
+
+                        Grid::make(3)
+                            ->schema([
+                                Forms\Components\Toggle::make('premium')
+                                    ->label('Premium (New)'),
+
+                                Forms\Components\Toggle::make('featured')
+                                    ->label('Featured (New)'),
+
+                                Forms\Components\DateTimePicker::make('publish_date')
+                                    ->label('Publish Date'),
+                            ]),
+
+                        Grid::make(2)
+                            ->schema([
+                                Forms\Components\DateTimePicker::make('published_at')
+                                    ->label('Published At'),
+
+                                Forms\Components\TextInput::make('views_count')
+                                    ->numeric()
+                                    ->default(0),
+                            ]),
+
                         Forms\Components\TagsInput::make('tags')
+                            ->placeholder('Add tags')
                             ->separator(','),
-                    ])
-                    ->columns(2),
+
+                        Forms\Components\KeyValue::make('metadata')
+                            ->label('Additional Metadata')
+                            ->keyLabel('Key')
+                            ->valueLabel('Value'),
+                    ]),
             ]);
     }
 
@@ -119,99 +243,179 @@ class VideoResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('thumbnail')
-                    ->square(),
+                    ->size(80, 60)
+                    ->getStateUsing(function ($record) {
+                        $thumbnail = $record->thumbnail;
+                        
+                        if (!$thumbnail) {
+                            return asset('assets/images/videos/default-thumbnail.jpg');
+                        }
+                        
+                        // If it's already a full URL, return as is
+                        if (str_starts_with($thumbnail, 'http://') || str_starts_with($thumbnail, 'https://')) {
+                            return $thumbnail;
+                        }
+                        
+                        // If it starts with assets/, return with asset() helper
+                        if (str_starts_with($thumbnail, 'assets/')) {
+                            return asset($thumbnail);
+                        }
+                        
+                        // If it's a storage path
+                        if (str_starts_with($thumbnail, 'storage/')) {
+                            return asset($thumbnail);
+                        }
+                        
+                        // Default case - assume it's in storage
+                        return asset("storage/{$thumbnail}");
+                    }),
+
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('duration'),
+                    ->searchable()
+                    ->sortable()
+                    ->limit(50),
+
+                Tables\Columns\TextColumn::make('category')
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'fight' => 'danger',
+                        'training' => 'info',
+                        'interview' => 'warning',
+                        'highlight' => 'success',
+                        default => 'gray',
+                    }),
+
                 Tables\Columns\TextColumn::make('video_type')
-                    ->badge(),
-                Tables\Columns\TextColumn::make('source_type')
-                    ->badge(),
-                Tables\Columns\TextColumn::make('boxer.full_name')
-                    ->label('Boxer')
-                    ->searchable(['boxers.first_name', 'boxers.last_name']),
-                Tables\Columns\TextColumn::make('publish_date')
-                    ->date()
+                    ->label('Type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'youtube' => 'danger',
+                        'vimeo' => 'info',
+                        'upload' => 'success',
+                        'embed' => 'warning',
+                        default => 'gray',
+                    }),
+
+                Tables\Columns\TextColumn::make('boxer.name')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(30),
+
+                Tables\Columns\TextColumn::make('views_count')
+                    ->label('Views')
+                    ->formatStateUsing(fn ($state) => number_format($state))
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('likes_count')
+                    ->label('Likes')
+                    ->formatStateUsing(fn ($state) => number_format($state))
+                    ->sortable(),
+
                 Tables\Columns\IconColumn::make('is_premium')
-                    ->boolean(),
+                    ->label('Premium')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-star')
+                    ->falseIcon('heroicon-o-minus'),
+
                 Tables\Columns\IconColumn::make('is_featured')
-                    ->boolean(),
+                    ->label('Featured')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-fire')
+                    ->falseIcon('heroicon-o-minus'),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'published' => 'success',
+                        'draft' => 'warning',
+                        'archived' => 'gray',
+                        default => 'gray',
+                    }),
+
+                Tables\Columns\TextColumn::make('published_at')
+                    ->label('Published')
+                    ->dateTime('M j, Y')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('video_type')
+                SelectFilter::make('status')
                     ->options([
-                        'highlight' => 'Highlight',
-                        'full_fight' => 'Full Fight',
-                        'interview' => 'Interview',
-                        'promo' => 'Promotional Video',
-                        'training' => 'Training',
-                        'documentary' => 'Documentary',
-                        'press_conference' => 'Press Conference',
-                        'weigh_in' => 'Weigh-in',
-                        'other' => 'Other',
+                        'draft' => 'Draft',
+                        'published' => 'Published',
+                        'archived' => 'Archived',
                     ]),
-                Tables\Filters\SelectFilter::make('source_type')
+
+                SelectFilter::make('category')
+                    ->options([
+                        'fight' => 'Fight',
+                        'training' => 'Training',
+                        'interview' => 'Interview',
+                        'highlight' => 'Highlight',
+                        'documentary' => 'Documentary',
+                        'analysis' => 'Analysis',
+                        'press_conference' => 'Press Conference',
+                        'weigh_in' => 'Weigh In',
+                        'behind_scenes' => 'Behind Scenes',
+                    ]),
+
+                SelectFilter::make('video_type')
                     ->options([
                         'youtube' => 'YouTube',
                         'vimeo' => 'Vimeo',
-                        'uploaded' => 'Uploaded File',
-                        'external' => 'External URL',
+                        'upload' => 'Upload',
+                        'embed' => 'Embed',
                     ]),
-                Tables\Filters\SelectFilter::make('boxer_id')
-                    ->relationship('boxer', 'first_name', function (Builder $query) {
-                        return $query->select('id', 'first_name', 'last_name')
-                            ->selectRaw("CONCAT(first_name, ' ', last_name) as full_name")
-                            ->orderBy('full_name');
-                    })
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}")
-                    ->searchable()
-                    ->label('Boxer'),
+
                 Tables\Filters\TernaryFilter::make('is_premium')
                     ->label('Premium Content'),
+
                 Tables\Filters\TernaryFilter::make('is_featured')
-                    ->label('Featured'),
+                    ->label('Featured Videos'),
+
+                SelectFilter::make('boxer')
+                    ->relationship('boxer', 'name')
+                    ->searchable()
+                    ->preload(),
+
+                TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->url(fn (BoxingVideo $record): string => route('videos.show', $record->slug))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\BulkAction::make('togglePremium')
-                        ->label('Toggle Premium Status')
-                        ->action(function (Builder $query, array $data) {
-                            $query->update([
-                                'is_premium' => $data['is_premium'] ?? false,
-                            ]);
+                    Tables\Actions\BulkAction::make('publish')
+                        ->label('Publish Selected')
+                        ->icon('heroicon-o-check')
+                        ->action(function ($records) {
+                            $records->each(function ($record) {
+                                $record->update(['status' => 'published']);
+                            });
                         })
-                        ->form([
-                            Forms\Components\Toggle::make('is_premium')
-                                ->label('Premium Content')
-                                ->default(true),
-                        ])
-                        ->deselectRecordsAfterCompletion(),
-                    Tables\Actions\BulkAction::make('toggleFeatured')
-                        ->label('Toggle Featured Status')
-                        ->action(function (Builder $query, array $data) {
-                            $query->update([
-                                'is_featured' => $data['is_featured'] ?? false,
-                            ]);
-                        })
-                        ->form([
-                            Forms\Components\Toggle::make('is_featured')
-                                ->label('Featured Video')
-                                ->default(true),
-                        ])
-                        ->deselectRecordsAfterCompletion(),
+                        ->requiresConfirmation(),
+                    Tables\Actions\BulkAction::make('feature')
+                        ->label('Feature Selected')
+                        ->icon('heroicon-o-star')
+                        ->action(function ($records) {
+                            $records->each(function ($record) {
+                                $record->update(['is_featured' => true]);
+                            });
+                        }),
                 ]),
             ])
-            ->defaultSort('publish_date', 'desc');
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -226,8 +430,22 @@ class VideoResource extends Resource
         return [
             'index' => Pages\ListVideos::route('/'),
             'create' => Pages\CreateVideo::route('/create'),
-            'view' => Pages\ViewVideo::route('/{record}'),
             'edit' => Pages\EditVideo::route('/{record}/edit'),
         ];
+    }
+
+    private static function extractVideoId($url): ?string
+    {
+        // YouTube
+        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
+            return $matches[1];
+        }
+
+        // Vimeo
+        if (preg_match('/vimeo\.com\/(?:video\/)?(\d+)/', $url, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
     }
 } 

@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class BoxingVideo extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -23,16 +24,19 @@ class BoxingVideo extends Model
         'duration',
         'is_premium',
         'is_featured',
+        'premium',
+        'featured',
         'status',
         'views_count',
         'likes_count',
         'published_at',
+        'publish_date',
         'tags',
         'meta_data',
+        'metadata',
         'category',
         'source_type',
         'video_file',
-        'publish_date',
         'boxer_id',
         'event_id',
     ];
@@ -40,12 +44,15 @@ class BoxingVideo extends Model
     protected $casts = [
         'is_premium' => 'boolean',
         'is_featured' => 'boolean',
+        'premium' => 'boolean',
+        'featured' => 'boolean',
         'views_count' => 'integer',
         'likes_count' => 'integer',
         'published_at' => 'datetime',
+        'publish_date' => 'datetime',
         'tags' => 'array',
         'meta_data' => 'json',
-        'publish_date' => 'date',
+        'metadata' => 'json',
     ];
 
     /**
@@ -85,24 +92,31 @@ class BoxingVideo extends Model
      */
     public function getThumbnailPathAttribute()
     {
-        // First check for thumbnail_path
-        if (!empty($this->attributes['thumbnail_path'])) {
-            if (Str::startsWith($this->attributes['thumbnail_path'], ['http://', 'https://', 'assets/'])) {
-                return $this->attributes['thumbnail_path'];
-            }
-            return $this->attributes['thumbnail_path'];
-        }
-        
-        // Fall back to thumbnail field
+        // Use the thumbnail field
         if (!empty($this->attributes['thumbnail'])) {
-            if (Str::startsWith($this->attributes['thumbnail'], ['http://', 'https://', 'assets/'])) {
-                return $this->attributes['thumbnail'];
+            $thumbnail = $this->attributes['thumbnail'];
+            
+            // If it's already a full URL, return as is
+            if (Str::startsWith($thumbnail, ['http://', 'https://'])) {
+                return $thumbnail;
             }
-            return "storage/{$this->attributes['thumbnail']}";
+            
+            // If it starts with assets/, return with asset() helper
+            if (Str::startsWith($thumbnail, 'assets/')) {
+                return asset($thumbnail);
+            }
+            
+            // If it's a storage path, handle accordingly
+            if (Str::startsWith($thumbnail, 'storage/')) {
+                return asset($thumbnail);
+            }
+            
+            // Default case - assume it's in storage
+            return asset("storage/{$thumbnail}");
         }
 
         // Default thumbnail
-        return 'assets/images/videos/default-thumbnail.jpg';
+        return asset('assets/images/videos/default-thumbnail.jpg');
     }
 
     /**

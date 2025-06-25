@@ -12,195 +12,113 @@
             </p>
         </div>
         
-        @if($event->tickets_available && $event->isUpcoming)
-            @php
-                $tickets = $event->tickets()->where('is_active', true)->get();
-            @endphp
-            
-            @if($tickets->isNotEmpty())
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="tickets-container">
-                            @foreach($tickets as $ticket)
-                                <div class="ticket-card">
-                                    <div class="ticket-header">
-                                        <h3 class="ticket-name">{{ $ticket->name }}</h3>
-                                        <div class="ticket-price">${{ number_format($ticket->price, 2) }}</div>
-                                    </div>
-                                    
-                                    <div class="ticket-body">
-                                        <div class="ticket-description">
-                                            {{ $ticket->description }}
-                                        </div>
-                                        
-                                        @if($ticket->benefits)
-                                            <div class="ticket-benefits">
-                                                <h4>Benefits</h4>
-                                                <ul>
-                                                    @foreach(json_decode($ticket->benefits, true) as $benefit)
-                                                        <li><i class="fas fa-check"></i> {{ $benefit }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                        
-                                        <div class="ticket-details">
-                                            <div class="detail-row">
-                                                <span class="detail-label">Type:</span>
-                                                <span class="detail-value">{{ ucfirst($ticket->ticket_type) }}</span>
-                                            </div>
-                                            
-                                            @if($ticket->seating_info)
-                                                <div class="detail-row">
-                                                    <span class="detail-label">Seating:</span>
-                                                    <span class="detail-value">{{ $ticket->seating_info }}</span>
-                                                </div>
-                                            @endif
-                                            
-                                            @if($ticket->quantity_available > 0)
-                                                <div class="detail-row">
-                                                    <span class="detail-label">Available:</span>
-                                                    <span class="detail-value">{{ $ticket->quantity_available - $ticket->quantity_sold }} tickets</span>
-                                                </div>
-                                            @endif
-                                            
-                                            @if($ticket->sale_ends_at)
-                                                <div class="detail-row">
-                                                    <span class="detail-label">Sale Ends:</span>
-                                                    <span class="detail-value">{{ Carbon\Carbon::parse($ticket->sale_ends_at)->format('F j, Y, g:i A') }}</span>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="ticket-footer">
-                                        @if($ticket->quantity_available > $ticket->quantity_sold)
-                                            <button class="btn btn-primary buy-ticket-btn" data-ticket-id="{{ $ticket->id }}" data-ticket-name="{{ $ticket->name }}" data-ticket-price="{{ $ticket->price }}">
-                                                <i class="fas fa-ticket-alt"></i> BUY NOW
-                                            </button>
-                                        @else
-                                            <button class="btn btn-sold-out" disabled>
-                                                <i class="fas fa-times-circle"></i> SOLD OUT
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
+        @if($event->tickets_available && $event->tickets->count() > 0)
+            <div class="tickets-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="section-title">
+                                <h2>Tickets</h2>
+                                <p>Purchase your tickets for this event</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="col-lg-4">
-                        <div class="checkout-card" id="checkoutCard" style="display: none;">
-                            <div class="checkout-header">
-                                <h3>Your Order</h3>
-                            </div>
-                            
-                            <div class="checkout-body">
-                                <div class="checkout-item">
-                                    <span class="item-name" id="checkoutTicketName"></span>
-                                    <span class="item-price" id="checkoutTicketPrice"></span>
-                                </div>
-                                
-                                <div class="quantity-selector">
-                                    <label for="ticketQuantity">Quantity:</label>
-                                    <div class="quantity-controls">
-                                        <button type="button" class="quantity-btn minus">-</button>
-                                        <input type="number" id="ticketQuantity" class="quantity-input" min="1" max="10" value="1">
-                                        <button type="button" class="quantity-btn plus">+</button>
-                                    </div>
-                                </div>
-                                
-                                <div class="checkout-summary">
-                                    <div class="summary-row">
-                                        <span>Subtotal:</span>
-                                        <span id="checkoutSubtotal"></span>
-                                    </div>
-                                    <div class="summary-row">
-                                        <span>Service Fee:</span>
-                                        <span id="checkoutFee"></span>
-                                    </div>
-                                    <div class="summary-row total">
-                                        <span>Total:</span>
-                                        <span id="checkoutTotal"></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="checkout-form">
-                                    <div class="form-group">
-                                        <label for="checkoutEmail">Email:</label>
-                                        <input type="email" id="checkoutEmail" class="form-control" placeholder="Enter your email" value="{{ auth()->check() ? auth()->user()->email : '' }}">
-                                    </div>
-                                    
-                                    @if(!auth()->check())
-                                        <div class="login-prompt">
-                                            <p>Already have an account? <a href="{{ route('login') }}?redirect={{ route('events.show', $event->slug) }}">Log in</a> for faster checkout.</p>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            
-                            <div class="checkout-footer">
-                                <button type="button" class="btn btn-outline" id="cancelCheckout">CANCEL</button>
-                                <button type="button" class="btn btn-primary" id="proceedToPayment">CHECKOUT</button>
-                            </div>
-                        </div>
+                    <div class="row">
+                        @php
+                            // Get active tickets
+                            $tickets = $event->tickets()->where('status', 'active')->get();
+                        @endphp
                         
-                        <div class="event-info-card">
-                            <div class="event-info-header">
-                                <h3>Event Information</h3>
+                        @if($tickets->count() > 0)
+                            @foreach($tickets as $ticket)
+                                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                    <div class="ticket-card">
+                                        <div class="ticket-header">
+                                            <h4 class="ticket-name">{{ $ticket->name }}</h4>
+                                            <div class="ticket-price">
+                                                <span class="currency">{{ $ticket->currency }}</span>
+                                                <span class="amount">{{ number_format($ticket->price, 2) }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="ticket-body">
+                                            @if($ticket->description)
+                                                <p class="ticket-description">{{ $ticket->description }}</p>
+                                            @endif
+                                            
+                                            <div class="ticket-details">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">Type:</span>
+                                                    <span class="detail-value">{{ ucfirst($ticket->ticket_type) }}</span>
+                                                </div>
+                                                
+                                                @if($ticket->seating_area)
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Seating:</span>
+                                                        <span class="detail-value">{{ $ticket->seating_area }}</span>
+                                                    </div>
+                                                @endif
+                                                
+                                                <div class="detail-item">
+                                                    <span class="detail-label">Available:</span>
+                                                    <span class="detail-value">{{ $ticket->quantity_available - $ticket->quantity_sold }}</span>
+                                                </div>
+                                                
+                                                <div class="detail-item">
+                                                    <span class="detail-label">Max per purchase:</span>
+                                                    <span class="detail-value">{{ $ticket->max_per_purchase }}</span>
+                                                </div>
+                                                
+                                                @if($ticket->sale_end_date)
+                                                    <div class="detail-item">
+                                                        <span class="detail-label">Sale ends:</span>
+                                                        <span class="detail-value">{{ Carbon\Carbon::parse($ticket->sale_end_date)->format('F j, Y, g:i A') }}</span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            
+                                            @if($ticket->ticket_features && is_array($ticket->ticket_features))
+                                                <div class="ticket-features">
+                                                    <h6>Features:</h6>
+                                                    <ul>
+                                                        @foreach($ticket->ticket_features as $feature)
+                                                            <li>{{ $feature }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="ticket-footer">
+                                            @if($ticket->quantity_available > $ticket->quantity_sold)
+                                                <button class="btn btn-primary btn-purchase-ticket" 
+                                                        data-ticket-id="{{ $ticket->id }}"
+                                                        data-ticket-name="{{ $ticket->name }}"
+                                                        data-ticket-price="{{ $ticket->price }}"
+                                                        data-max-quantity="{{ min($ticket->max_per_purchase, $ticket->quantity_available - $ticket->quantity_sold) }}">
+                                                    Purchase Ticket
+                                                </button>
+                                            @else
+                                                <button class="btn btn-secondary" disabled>
+                                                    Sold Out
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <h5>No tickets available at this time.</h5>
+                                    <p>Please check back later or contact us for more information.</p>
+                                </div>
                             </div>
-                            
-                            <div class="event-info-body">
-                                <div class="info-row">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <div>
-                                        <span class="info-label">Date</span>
-                                        <span class="info-value">{{ $event->event_date->format('F j, Y') }}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="info-row">
-                                    <i class="fas fa-clock"></i>
-                                    <div>
-                                        <span class="info-label">Time</span>
-                                        <span class="info-value">{{ $event->event_time ? $event->event_time->format('g:i A') : 'TBA' }}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="info-row">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <div>
-                                        <span class="info-label">Venue</span>
-                                        <span class="info-value">{{ $event->venue }}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="info-row">
-                                    <i class="fas fa-map-pin"></i>
-                                    <div>
-                                        <span class="info-label">Location</span>
-                                        <span class="info-value">{{ $event->city }}, {{ $event->country }}</span>
-                                    </div>
-                                </div>
-                                
-                                @if($event->address)
-                                    <div class="venue-map">
-                                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ urlencode($event->address) }}&zoom=14&size=400x200&markers=color:red|{{ urlencode($event->address) }}&key=YOUR_GOOGLE_MAPS_API_KEY" alt="Venue Map" class="img-fluid">
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
-            @else
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-ticket-alt"></i>
-                    </div>
-                    <h3 class="empty-title">No Tickets Available</h3>
-                    <p class="empty-description">Tickets for this event are not yet available for purchase. Please check back later.</p>
-                </div>
-            @endif
+            </div>
         @else
             <div class="empty-state">
                 <div class="empty-icon">

@@ -132,6 +132,25 @@ class Boxer extends Model
     }
 
     /**
+     * Get the boxer's win rate as a percentage
+     */
+    public function getWinRateAttribute()
+    {
+        $totalFights = $this->wins + $this->losses + $this->draws;
+        if ($totalFights == 0) return 0;
+        return round(($this->wins / $totalFights) * 100, 1);
+    }
+
+    /**
+     * Get the boxer's knockout rate as a percentage
+     */
+    public function getKoRateAttribute()
+    {
+        if ($this->wins == 0) return 0;
+        return round(($this->knockouts / $this->wins) * 100, 1);
+    }
+
+    /**
      * Get the boxer's thumbnail path
      */
     public function getThumbnailAttribute()
@@ -434,15 +453,25 @@ class Boxer extends Model
      */
     public function getTitlesAttribute($value)
     {
-        if (is_string($value)) {
-            $decoded = json_decode($value, true);
-            return is_array($decoded) ? $decoded : [];
+        // If value is null or empty, return empty array
+        if (empty($value)) {
+            return [];
         }
         
+        // If value is already an array, return it
         if (is_array($value)) {
             return $value;
         }
         
+        // If value is a string, try to decode it
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $decoded;
+            }
+        }
+        
+        // Fallback to empty array for any other case
         return [];
     }
 
@@ -452,11 +481,25 @@ class Boxer extends Model
     public function setTitlesAttribute($value)
     {
         if (is_array($value)) {
+            // If it's an array, encode to JSON
             $this->attributes['titles'] = json_encode($value);
         } elseif (is_string($value)) {
-            // If it's already JSON, use as-is
-            $this->attributes['titles'] = $value;
+            // If it's a string, check if it's empty or valid JSON
+            if (empty($value)) {
+                // Empty string should be stored as empty JSON array
+                $this->attributes['titles'] = json_encode([]);
+            } else {
+                // Try to decode and re-encode to ensure valid JSON
+                $decoded = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $this->attributes['titles'] = $value;
+                } else {
+                    // If not valid JSON, treat as empty
+                    $this->attributes['titles'] = json_encode([]);
+                }
+            }
         } else {
+            // For any other type (null, etc.), store as empty JSON array
             $this->attributes['titles'] = json_encode([]);
         }
     }

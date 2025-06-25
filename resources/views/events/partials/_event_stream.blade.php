@@ -29,10 +29,10 @@
             <div class="video-player-container">
                 @if($event->isOngoing)
                     @if($event->is_free || (auth()->check() && auth()->user()->hasPurchasedTicket($event->id)))
-                        @if(isset($event->meta_data) && is_array(json_decode($event->meta_data, true)) && isset(json_decode($event->meta_data, true)['stream_url']))
+                        @if(isset($event->meta_data) && is_array($event->meta_data) && isset($event->meta_data['stream_url']))
                             @php
-                                $streamUrl = json_decode($event->meta_data, true)['stream_url'];
-                                $streamType = json_decode($event->meta_data, true)['stream_type'] ?? 'youtube';
+                                $streamUrl = $event->meta_data['stream_url'];
+                                $streamType = $event->meta_data['stream_type'] ?? 'youtube';
                             @endphp
                             
                             @if($streamType === 'youtube')

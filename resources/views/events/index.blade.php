@@ -3,6 +3,36 @@
 @section('title', 'Boxing Events Calendar')
 
 @section('content')
+<!-- Banner Style One Start -->
+<section class="banner-style-one">
+    <div class="parallax" style="background-image: url({{ asset('assets/images/banner/events_page_banner.jpg') }});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="banner-details">
+                <h2>Boxing Events Calendar</h2>
+                <p>Discover upcoming and past boxing events from Uganda's premier boxing promotion company - professionally managed, high-octane events showcasing the best talent.</p>
+            </div>
+        </div>
+    </div>
+    <div class="breadcrums">
+        <div class="container">
+            <div class="row">
+                <ul>
+                    <li>
+                        <a href="{{ route('home') }}">
+                            <i class="fa-solid fa-house"></i>
+                           
+                    </li>
+                    <li class="current">
+                        <p>Boxing Events</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Banner Style One End -->
+
 <div class="events-listing-section">
     <div class="bg-text">EVENTS</div>
     <div class="container">

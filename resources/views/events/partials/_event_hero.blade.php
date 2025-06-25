@@ -89,7 +89,7 @@
             <!-- Event Poster -->
             <div class="col-lg-5">
                 <div class="event-poster">
-                    <img src="{{ asset($event->image_path ?: 'assets/images/events/default-poster.jpg') }}" alt="{{ $event->name }} Poster">
+                    <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/events/default-poster.jpg') }}" alt="{{ $event->name }} Poster">
                 </div>
             </div>
         </div>

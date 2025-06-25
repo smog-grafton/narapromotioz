@@ -32,17 +32,38 @@ class EventResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->reactive()
+                            ->afterStateUpdated(fn (callable $set, $state) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                        Forms\Components\TextInput::make('slug')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true)
+                            ->helperText('Auto-generated from name, but you can modify it. Must be unique.')
+                            ->rules(['regex:/^[a-z0-9\-]+$/'])
+                            ->validationMessages([
+                                'regex' => 'The slug must only contain lowercase letters, numbers, and hyphens.',
+                            ]),
                         Forms\Components\TextInput::make('tagline')
                             ->maxLength(255),
                         Forms\Components\DateTimePicker::make('event_date')
                             ->required(),
+                        Forms\Components\TimePicker::make('event_time')
+                            ->label('Event Time'),
                         Forms\Components\TextInput::make('venue')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('location')
+                        Forms\Components\TextInput::make('city')
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\TextInput::make('country')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('address')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('location')
+                            ->maxLength(255)
+                            ->helperText('Legacy field - use city/country instead'),
                         Forms\Components\Select::make('status')
                             ->options([
                                 'upcoming' => 'Upcoming',
@@ -63,6 +84,20 @@ class EventResource extends Resource
                             ])
                             ->required()
                             ->default('regular'),
+                        Forms\Components\TextInput::make('network')
+                            ->label('Broadcasting Network')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('broadcast_network')
+                            ->label('Broadcast Network (Alternative)')
+                            ->maxLength(255)
+                            ->helperText('Additional or alternative broadcasting network'),
+                        Forms\Components\Select::make('broadcast_type')
+                            ->options([
+                                'live' => 'Live TV',
+                                'ppv' => 'Pay-Per-View',
+                                'streaming' => 'Streaming',
+                                'delayed' => 'Delayed Broadcast',
+                            ]),
                     ])
                     ->columns(2),
 
@@ -72,6 +107,26 @@ class EventResource extends Resource
                             ->image()
                             ->directory('events/posters')
                             ->maxSize(5120)
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('image_path')
+                            ->label('Featured Image')
+                            ->image()
+                            ->directory('events/featured')
+                            ->maxSize(5120)
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('banner_path')
+                            ->label('Banner Image')
+                            ->image()
+                            ->directory('events/banners')
+                            ->maxSize(5120)
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('photos')
+                            ->label('Event Photos')
+                            ->multiple()
+                            ->image()
+                            ->directory('events/photos')
+                            ->maxSize(5120)
+                            ->maxFiles(20)
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('promo_images')
                             ->multiple()
@@ -219,17 +274,60 @@ class EventResource extends Resource
                             ->columnSpanFull(),
                     ]),
 
+                Forms\Components\Section::make('Sponsors & Metadata')
+                    ->schema([
+                        Forms\Components\Repeater::make('sponsors')
+                            ->label('Event Sponsors')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\FileUpload::make('logo')
+                                    ->image()
+                                    ->directory('events/sponsors')
+                                    ->maxSize(2048)
+                                    ->required(),
+                                Forms\Components\TextInput::make('url')
+                                    ->label('Sponsor Website URL')
+                                    ->url(),
+                                Forms\Components\Select::make('tier')
+                                    ->options([
+                                        'title' => 'Title Sponsor',
+                                        'main' => 'Main Sponsor',
+                                        'supporting' => 'Supporting Sponsor',
+                                        'media' => 'Media Partner',
+                                    ])
+                                    ->default('supporting'),
+                            ])
+                            ->columns(2)
+                            ->collapsible()
+                            ->columnSpanFull(),
+                        Forms\Components\KeyValue::make('meta_data')
+                            ->label('Additional Metadata')
+                            ->keyLabel('Key')
+                            ->valueLabel('Value')
+                            ->columnSpanFull(),
+                    ]),
+
                 Forms\Components\Section::make('Event Details')
                     ->schema([
                         Forms\Components\RichEditor::make('description')
                             ->columnSpanFull(),
+                        Forms\Components\RichEditor::make('full_description')
+                            ->label('Full Description')
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('broadcast_network')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText('Legacy field - use network instead'),
                         Forms\Components\TextInput::make('ppv_price')
                             ->label('PPV Price (if applicable)')
                             ->numeric()
                             ->prefix('$'),
                         Forms\Components\TextInput::make('promoter')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('organizer')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('sanctioning_body')
                             ->maxLength(255),
                         Forms\Components\Toggle::make('is_featured')
                             ->label('Featured Event')
@@ -237,30 +335,46 @@ class EventResource extends Resource
                         Forms\Components\Toggle::make('is_ppv')
                             ->label('Pay-per-view Event')
                             ->default(false),
+                        Forms\Components\Toggle::make('is_free')
+                            ->label('Free Event')
+                            ->default(false),
                         Forms\Components\Toggle::make('tickets_available')
                             ->label('Tickets Available')
                             ->default(true),
+                        Forms\Components\Toggle::make('live_gate_open')
+                            ->label('Live Gate Open')
+                            ->default(true),
+                        Forms\Components\TextInput::make('min_ticket_price')
+                            ->label('Minimum Ticket Price')
+                            ->numeric()
+                            ->prefix('$'),
+                        Forms\Components\TextInput::make('max_ticket_price')
+                            ->label('Maximum Ticket Price')
+                            ->numeric()
+                            ->prefix('$'),
+                        Forms\Components\TextInput::make('ticket_purchase_url')
+                            ->label('Ticket Purchase URL')
+                            ->url()
+                            ->maxLength(255),
                     ])
                     ->columns(2),
 
                 Forms\Components\Section::make('Main Event')
                     ->schema([
                         Forms\Components\Select::make('main_event_boxer_1_id')
-                            ->relationship('mainEventBoxer1', 'first_name', function (Builder $query) {
-                                return $query->select('id', 'first_name', 'last_name')
-                                    ->selectRaw("CONCAT(first_name, ' ', last_name) as full_name")
-                                    ->orderBy('full_name');
+                            ->relationship('mainEventBoxer1', 'name', function (Builder $query) {
+                                return $query->select('id', 'name')
+                                    ->orderBy('name');
                             })
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}")
-                            ->searchable(['first_name', 'last_name']),
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                            ->searchable(['name']),
                         Forms\Components\Select::make('main_event_boxer_2_id')
-                            ->relationship('mainEventBoxer2', 'first_name', function (Builder $query) {
-                                return $query->select('id', 'first_name', 'last_name')
-                                    ->selectRaw("CONCAT(first_name, ' ', last_name) as full_name")
-                                    ->orderBy('full_name');
+                            ->relationship('mainEventBoxer2', 'name', function (Builder $query) {
+                                return $query->select('id', 'name')
+                                    ->orderBy('name');
                             })
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}")
-                            ->searchable(['first_name', 'last_name']),
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                            ->searchable(['name']),
                         Forms\Components\TextInput::make('weight_class')
                             ->maxLength(255),
                         Forms\Components\TextInput::make('title')
@@ -282,6 +396,11 @@ class EventResource extends Resource
                     ->square(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable()
+                    ->copyable()
+                    ->copyMessage('Slug copied to clipboard')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('event_date')
                     ->dateTime()
                     ->sortable(),

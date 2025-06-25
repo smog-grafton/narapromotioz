@@ -12,8 +12,92 @@
 @endsection
 
 @section('content')
-    <!-- Event Hero Section -->
-    @include('events.partials._event_hero')
+<!-- Banner Style One Start -->
+<section class="banner-style-one">
+    <div class="parallax" style="background-image: url({{ $event->banner_path ? asset($event->banner_path) : asset('assets/images/banner/event_banner.jpg') }});"></div>
+    <div class="container">
+        <div class="row">
+            <div class="banner-details">
+                <h2>{{ $event->name }}</h2>
+                <p>{{ $event->tagline ?? 'Experience the excitement of professional boxing at its finest.' }}</p>
+                
+                <div class="event-meta-info">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{{ \Carbon\Carbon::parse($event->event_date)->format('F j, Y') }}
+                        @if($event->event_time)
+                            at {{ \Carbon\Carbon::parse($event->event_time)->format('g:i A') }}
+                        @endif
+                        </span>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ $event->venue }}, {{ $event->city }}, {{ $event->country }}</span>
+                    </div>
+                    
+                    @if($event->network)
+                        <div class="meta-item">
+                            <i class="fas fa-tv"></i>
+                            <span>{{ $event->network }}</span>
+                        </div>
+                    @endif
+                </div>
+                
+                <div class="event-actions">
+                    @if($isPastEvent)
+                        <a href="#results" class="theme-btn">
+                            <i class="fas fa-trophy"></i> View Results
+                        </a>
+                        <a href="#highlights" class="theme-btn theme-btn-outline">
+                            <i class="fas fa-play"></i> Watch Highlights
+                        </a>
+                    @else
+                        @if($event->tickets_available)
+                            <a href="#tickets" class="theme-btn">
+                                <i class="fas fa-ticket-alt"></i> Get Tickets
+                            </a>
+                        @endif
+                        
+                        @if($event->isOngoing && !$event->is_free)
+                            <a href="#stream" class="theme-btn">
+                                <i class="fas fa-play-circle"></i> Watch Live
+                            </a>
+                        @endif
+                        
+                        <a href="#fight-card" class="theme-btn theme-btn-outline">
+                            <i class="fas fa-list"></i> View Fight Card
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcrums">
+        <div class="container">
+            <div class="row">
+                <ul>
+                    <li>
+                        <a href="{{ route('home') }}">
+                            <i class="fa-solid fa-house"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('events.index') }}">
+                            <i class="fa-solid fa-calendar"></i>
+                            <p>Events</p>
+                        </a>
+                    </li>
+                    <li class="current">
+                        <p>{{ $event->name }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Banner Style One End -->
 
     <!-- Event Stream Section (If available) -->
     @if($event->has_stream)
@@ -40,7 +124,7 @@
     @include('events.partials._related_news')
 
     <!-- Event Sponsors Section -->
-    @if($event->sponsors && count(json_decode($event->sponsors, true)) > 0)
+    @if($event->sponsors && count($event->sponsors) > 0)
         <section class="sponsors-section">
             <div class="container">
                 <div class="section-header text-center">
@@ -48,7 +132,7 @@
                 </div>
                 
                 <div class="sponsors-grid">
-                    @foreach(json_decode($event->sponsors, true) as $sponsor)
+                    @foreach($event->sponsors as $sponsor)
                         <div class="sponsor-item">
                             <a href="{{ $sponsor['url'] ?? '#' }}" target="_blank" class="sponsor-link">
                                 <img src="{{ asset('storage/' . $sponsor['logo']) }}" alt="{{ $sponsor['name'] }}" class="sponsor-img">
@@ -92,6 +176,84 @@
 
 @push('styles')
 <style>
+    /* Event Banner Custom Styles */
+    .banner-style-one .banner-details .event-meta-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin: 2rem 0;
+        align-items: center;
+    }
+    
+    .banner-style-one .banner-details .event-meta-info .meta-item {
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1rem;
+    }
+    
+    .banner-style-one .banner-details .event-meta-info .meta-item i {
+        color: #dc3545;
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .banner-style-one .banner-details .event-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .banner-style-one .banner-details .event-actions .theme-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.875rem 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.875rem;
+    }
+    
+    .banner-style-one .banner-details .event-actions .theme-btn i {
+        margin-right: 0.5rem;
+        font-size: 0.9em;
+    }
+    
+    .banner-style-one .banner-details .event-actions .theme-btn-outline {
+        background-color: transparent;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .banner-style-one .banner-details .event-actions .theme-btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .banner-style-one .banner-details .event-meta-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .banner-style-one .banner-details .event-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .banner-style-one .banner-details .event-actions .theme-btn {
+            justify-content: center;
+            text-align: center;
+        }
+    }
+
     /* Sponsors Section Styles */
     .sponsors-section {
         padding: 4rem 0;
@@ -154,14 +316,14 @@
     }
     
     .newsletter-wrapper {
-        background: linear-gradient(to right, $theme-red, darken($theme-red, 20%));
+        background: linear-gradient(to right, #dc3545, #c82333);
         padding: 3rem;
         border-radius: 8px;
-        color: $text-light;
+        color: #fff;
     }
     
     .newsletter-title {
-        font-family: $font-family-heading;
+        font-family: 'Anton', sans-serif;
         font-size: 2.25rem;
         font-weight: 700;
         margin-bottom: 1rem;
@@ -173,70 +335,44 @@
         margin-bottom: 0;
     }
     
-    .newsletter-form {
-        .input-group {
-            .form-control {
-                height: 50px;
-                border: none;
-                padding: 0 1.25rem;
-                font-size: 1rem;
-                background: $white;
-                color: $text-dark;
-                
-                &:focus {
-                    box-shadow: none;
-                }
-            }
-            
-            .btn {
-                padding: 0 1.5rem;
-                font-weight: 600;
-                letter-spacing: 1px;
-                border: none;
-                background: $text-dark;
-                color: $white;
-                
-                &:hover {
-                    background: lighten($text-dark, 10%);
-                }
-            }
-        }
-        
-        .form-check {
-            color: rgba(255, 255, 255, 0.9);
-            
-            .form-check-input {
-                background-color: rgba(255, 255, 255, 0.2);
-                border-color: rgba(255, 255, 255, 0.4);
-                
-                &:checked {
-                    background-color: $white;
-                    border-color: $white;
-                }
-            }
-            
-            .form-check-label {
-                font-size: 0.9rem;
-            }
-        }
+    .newsletter-form .input-group .form-control {
+        height: 50px;
+        border: none;
+        padding: 0 1.25rem;
+        font-size: 1rem;
+        background: #fff;
+        color: #333;
     }
     
-    /* Responsive Styles */
-    @media (max-width: 992px) {
-        .newsletter-wrapper {
-            padding: 2rem;
-        }
-        
-        .newsletter-form {
-            margin-top: 2rem;
-        }
+    .newsletter-form .input-group .form-control:focus {
+        box-shadow: none;
     }
     
-    @media (max-width: 768px) {
-        .sponsor-item {
-            width: 160px;
-            height: 100px;
-        }
+    .newsletter-form .input-group .btn {
+        padding: 0 1.5rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        border: none;
+        background: #333;
+        color: #fff;
+    }
+    
+    .newsletter-form .input-group .btn:hover {
+        background: #555;
+    }
+    
+    .newsletter-form .form-check {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .newsletter-form .form-check .form-check-input {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .newsletter-form .form-check .form-check-input:checked {
+        background-color: #fff;
+        border-color: #fff;
     }
 </style>
 @endpush

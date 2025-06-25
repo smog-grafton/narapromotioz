@@ -5,19 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\BoxingEvent;
 use App\Models\EventTicket;
 use App\Models\TicketPurchase;
-use App\Services\TicketGenerationService;
+use App\Models\TicketTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class TicketController extends Controller
 {
-    protected $ticketGenerationService;
-
-    public function __construct(TicketGenerationService $ticketGenerationService)
+    public function __construct()
     {
-        $this->ticketGenerationService = $ticketGenerationService;
+        $this->middleware('auth');
     }
 
     /**
@@ -37,77 +36,76 @@ class TicketController extends Controller
     /**
      * Show ticket purchase form
      */
-    public function purchase(EventTicket $ticket)
-    {
-        if (!$ticket->is_available) {
-            return redirect()->back()->with('error', 'This ticket is no longer available.');
-        }
-
-        return view('tickets.purchase', compact('ticket'));
-    }
-
-    /**
-     * Process ticket purchase
-     */
-    public function processPurchase(Request $request, EventTicket $ticket)
+    public function purchase(Request $request, BoxingEvent $event)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:' . min($ticket->max_per_purchase, $ticket->remaining_quantity),
-            'ticket_holder_name' => 'required|string|max:255',
-            'ticket_holder_email' => 'required|email|max:255',
-            'ticket_holder_phone' => 'nullable|string|max:20',
+            'ticket_template_id' => 'required|exists:ticket_templates,id',
+            'quantity' => 'required|integer|min:1|max:10',
+            'attendee_name' => 'required|string|max:255',
+            'attendee_email' => 'required|email|max:255',
+            'attendee_phone' => 'nullable|string|max:20',
         ]);
 
-        $quantity = $request->quantity;
-        $unitPrice = $ticket->price;
-        $totalPrice = $unitPrice * $quantity;
-        $tax = $totalPrice * 0.16; // 16% VAT
-        $fee = $totalPrice * 0.025; // 2.5% processing fee
-        $grandTotal = $totalPrice + $tax + $fee;
+        try {
+            DB::beginTransaction();
 
-        // Create ticket purchase record
-        $purchase = TicketPurchase::create([
-            'user_id' => Auth::id(),
-            'event_ticket_id' => $ticket->id,
-            'order_number' => $this->generateOrderNumber(),
-            'ticket_holder_name' => $request->ticket_holder_name,
-            'ticket_holder_email' => $request->ticket_holder_email,
-            'ticket_holder_phone' => $request->ticket_holder_phone,
-            'quantity' => $quantity,
-            'unit_price' => $unitPrice,
-            'total_price' => $totalPrice,
-            'tax' => $tax,
-            'fee' => $fee,
-            'grand_total' => $grandTotal,
-            'status' => 'pending',
-            'payment_method' => 'pesapal',
-        ]);
+            $template = TicketTemplate::findOrFail($request->ticket_template_id);
+            $quantity = $request->quantity;
 
-        // Redirect to payment gateway
-        return $this->initiatePayment($purchase);
-    }
+            // Check availability
+            $availableTickets = EventTicket::where('ticket_template_id', $template->id)
+                ->where('status', 'available')
+                ->count();
 
-    /**
-     * Initiate payment with Pesapal
-     */
-    protected function initiatePayment(TicketPurchase $purchase)
-    {
-        // This is a placeholder for Pesapal integration
-        // In a real implementation, you would:
-        // 1. Configure Pesapal API credentials
-        // 2. Create payment request
-        // 3. Redirect to Pesapal gateway
+            if ($availableTickets < $quantity) {
+                throw new \Exception('Not enough tickets available. Only ' . $availableTickets . ' tickets left.');
+            }
 
-        $paymentData = [
-            'amount' => $purchase->grand_total,
-            'currency' => 'KES',
-            'description' => "Ticket purchase for {$purchase->ticket->event->name}",
-            'callback_url' => route('tickets.payment.callback'),
-            'reference' => $purchase->order_number,
-        ];
+            // Calculate total amount
+            $totalAmount = $template->price * $quantity;
 
-        // For now, simulate successful payment for testing
-        return redirect()->route('tickets.payment.success', $purchase->order_number);
+            // Get available tickets
+            $tickets = EventTicket::where('ticket_template_id', $template->id)
+                ->where('status', 'available')
+                ->limit($quantity)
+                ->get();
+
+            // Create purchase record
+            $purchase = TicketPurchase::create([
+                'user_id' => Auth::id(),
+                'event_id' => $event->id,
+                'ticket_template_id' => $template->id,
+                'quantity' => $quantity,
+                'total_amount' => $totalAmount,
+                'purchase_reference' => 'TKT-' . strtoupper(Str::random(8)),
+                'attendee_name' => $request->attendee_name,
+                'attendee_email' => $request->attendee_email,
+                'attendee_phone' => $request->attendee_phone,
+                'status' => 'completed', // For now, we'll mark as completed
+                'payment_method' => 'cash', // Default payment method
+                'payment_status' => 'completed',
+            ]);
+
+            // Update ticket statuses and link to purchase
+            foreach ($tickets as $ticket) {
+                $ticket->update([
+                    'status' => 'sold',
+                    'ticket_purchase_id' => $purchase->id,
+                    'sold_at' => now(),
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('tickets.my-tickets')
+                ->with('success', 'Tickets purchased successfully! Reference: ' . $purchase->purchase_reference);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Ticket purchase failed: ' . $e->getMessage());
+            
+            return back()->with('error', 'Purchase failed: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -147,8 +145,8 @@ class TicketController extends Controller
             // Update ticket sold quantity
             $purchase->ticket->increment('quantity_sold', $purchase->quantity);
 
-            // Generate ticket
-            $this->ticketGenerationService->generateTicket($purchase);
+            // TODO: Implement ticket generation service
+            // $this->ticketGenerationService->generateTicket($purchase);
         });
 
         return redirect()->route('tickets.success', $purchase->order_number);
@@ -254,23 +252,19 @@ class TicketController extends Controller
     /**
      * Download ticket
      */
-    public function download($orderNumber)
+    public function downloadTicket(TicketPurchase $purchase)
     {
-        $purchase = TicketPurchase::where('order_number', $orderNumber)
-            ->where('user_id', Auth::id())
-            ->first();
-
-        if (!$purchase || !$purchase->ticket_pdf_path) {
-            abort(404);
+        // Verify the purchase belongs to the authenticated user
+        if ($purchase->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to ticket.');
         }
 
-        $filePath = storage_path('app/public/' . $purchase->ticket_pdf_path);
+        // Load the purchase with its related data
+        $purchase->load(['event', 'ticketTemplate', 'tickets']);
 
-        if (!file_exists($filePath)) {
-            abort(404);
-        }
-
-        return response()->download($filePath, "ticket-{$orderNumber}.png");
+        // For now, we'll return a simple view
+        // In the future, you could generate a PDF here
+        return view('tickets.download', compact('purchase'));
     }
 
     /**
@@ -294,18 +288,19 @@ class TicketController extends Controller
     }
 
     /**
-     * User's tickets dashboard
+     * Display user's tickets
      */
     public function myTickets()
     {
         $user = Auth::user();
         
-        $tickets = TicketPurchase::where('user_id', $user->id)
-            ->with(['ticket.event'])
+        // Load tickets with proper relationships based on actual DB structure
+        $userTickets = TicketPurchase::where('user_id', $user->id)
+            ->with(['ticket.event']) // EventTicket has event() relationship to BoxingEvent
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->get(); // Changed from paginate for now to simplify debugging
 
-        return view('tickets.my-tickets', compact('tickets'));
+        return view('tickets.my-tickets', compact('userTickets'));
     }
 
     /**
@@ -318,5 +313,16 @@ class TicketController extends Controller
         } while (TicketPurchase::where('order_number', $orderNumber)->exists());
 
         return $orderNumber;
+    }
+
+    public function show(BoxingEvent $event)
+    {
+        // Load event with its tickets and templates
+        $event->load(['tickets.template']);
+        
+        // Group tickets by template for easier display
+        $ticketGroups = $event->tickets->groupBy('ticket_template_id');
+        
+        return view('tickets.show', compact('event', 'ticketGroups'));
     }
 }

@@ -38,7 +38,7 @@
                     @foreach($upcomingEvents as $event)
                         <div class="row event-item-row">
                             <div class="col-md-4 event-image-container">
-                                <img src="{{ asset($event->image_path ? $event->image_path : 'assets/images/events/event1.webp') }}" 
+                                <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/events/default-poster.jpg') }}" 
                                      alt="{{ $event->name }}" class="event-image">
                             </div>
                             <div class="col-md-8 event-details-container d-flex flex-column">
@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="event-network">
                                         <i class="fas fa-tv"></i>
-                                        {{ $event->broadcast_type ? 'Live on ' . $event->network : 'Live Event' }}
+                                        {{ $event->broadcast_network ? 'Live on ' . $event->broadcast_network : ($event->network ? 'Live on ' . $event->network : 'Live Event') }}
                                     </div>
                                 </div>
                                 <div class="event-actions mt-3">
@@ -75,8 +75,8 @@
                     @foreach($upcomingEvents as $event)
                         <div class="event-card">
                             <div class="event-card-image">
-                                <img src="{{ asset($event->image_path ? $event->image_path : 'assets/images/events/event1.webp') }}" 
-                                     alt="{{ $event->name }}">
+                                <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/events/default-poster.jpg') }}" 
+                                     alt="{{ $event->name }}" class="card-img-top">
                                 <div class="event-card-overlay">
                                     <div class="event-card-content">
                                         <h3 class="event-name">{{ strtoupper($event->name) }}</h3>
@@ -87,7 +87,7 @@
                                         </div>
                                         <div class="event-network">
                                             <i class="fas fa-tv"></i>
-                                            {{ $event->broadcast_type ? 'Live on ' . $event->network : 'Live Event' }}
+                                            {{ $event->broadcast_network ? 'Live on ' . $event->broadcast_network : ($event->network ? 'Live on ' . $event->network : 'Live Event') }}
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                     @foreach($pastEvents as $event)
                         <div class="row event-item-row">
                             <div class="col-md-4 event-image-container">
-                                <img src="{{ asset($event->image_path ? $event->image_path : 'assets/images/events/event4.webp') }}" 
+                                <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/events/default-poster.jpg') }}" 
                                      alt="{{ $event->name }}" class="event-image">
                             </div>
                             <div class="col-md-8 event-details-container d-flex flex-column">
@@ -134,7 +134,7 @@
                                     </div>
                                     <div class="event-network">
                                         <i class="fas fa-tv"></i>
-                                        {{ $event->broadcast_type ? 'Aired on ' . $event->network : 'Past Event' }}
+                                        {{ $event->broadcast_network ? 'Aired on ' . $event->broadcast_network : ($event->network ? 'Aired on ' . $event->network : 'Past Event') }}
                                     </div>
                                 </div>
                                 <div class="event-actions mt-3">
@@ -153,8 +153,8 @@
                     @foreach($pastEvents as $event)
                         <div class="event-card">
                             <div class="event-card-image">
-                                <img src="{{ asset($event->image_path ? $event->image_path : 'assets/images/events/event4.webp') }}" 
-                                     alt="{{ $event->name }}">
+                                <img src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('assets/images/events/default-poster.jpg') }}" 
+                                     alt="{{ $event->name }}" class="card-img-top">
                                 <div class="event-card-overlay">
                                     <div class="event-card-content">
                                         <h3 class="event-name">{{ strtoupper($event->name) }}</h3>
@@ -165,7 +165,7 @@
                                         </div>
                                         <div class="event-network">
                                             <i class="fas fa-tv"></i>
-                                            {{ $event->broadcast_type ? 'Aired on ' . $event->network : 'Past Event' }}
+                                            {{ $event->broadcast_network ? 'Aired on ' . $event->broadcast_network : ($event->network ? 'Aired on ' . $event->network : 'Past Event') }}
                                         </div>
                                     </div>
                                 </div>

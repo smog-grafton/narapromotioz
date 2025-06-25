@@ -5,10 +5,52 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Title -->
-        <title>@yield('title', config('app.name', 'Nara Promotionz'))</title>
+        <!-- SEO Meta Tags -->
+        <x-seo-meta 
+            :title="isset($seoData['title']) ? $seoData['title'] : null"
+            :description="isset($seoData['description']) ? $seoData['description'] : null"
+            :keywords="isset($seoData['keywords']) ? $seoData['keywords'] : null"
+            :image="isset($seoData['image']) ? $seoData['image'] : null"
+            :type="isset($seoData['type']) ? $seoData['type'] : 'website'"
+            :url="isset($seoData['url']) ? $seoData['url'] : null"
+            :published-time="isset($seoData['published_time']) ? $seoData['published_time'] : null"
+            :modified-time="isset($seoData['modified_time']) ? $seoData['modified_time'] : null"
+            :author="isset($seoData['author']) ? $seoData['author'] : null"
+            :video-duration="isset($seoData['video:duration']) ? $seoData['video:duration'] : null"
+            :video-release-date="isset($seoData['video:release_date']) ? $seoData['video:release_date'] : null"
+        />
 
-        <!-- Meta Tags -->
+        <!-- Structured Data -->
+        @if(isset($structuredData))
+        <script type="application/ld+json">
+        {!! json_encode($structuredData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+        </script>
+        @endif
+
+        <!-- Organization Structured Data (Global) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Nara Promotionz",
+            "url": "{{ url('/') }}",
+            "logo": "{{ asset('assets/images/logo.png') }}",
+            "description": "Professional boxing promotion company organizing world-class boxing events and managing professional boxers.",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+1-XXX-XXX-XXXX",
+                "contactType": "customer service",
+                "availableLanguage": "English"
+            },
+            "sameAs": [
+                "https://facebook.com/narapromotionz",
+                "https://twitter.com/narapromotionz",
+                "https://instagram.com/narapromotionz"
+            ]
+        }
+        </script>
+
+        <!-- Additional Meta Tags -->
         @yield('meta')
 
         <!-- Favicon -->
@@ -82,7 +124,7 @@
         <!-- Additional Head Content -->
         @yield('head')
     </head>
-    <body>
+    <body class="light-d">
         <!-- Page Wrapper -->
         <div class="page-wrapper">
             
@@ -103,12 +145,12 @@
         <!-- Core JavaScript Libraries -->
         <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
         
+        <!-- Bootstrap and Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
         <!-- Third-party Libraries -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jarallax/2.0.4/jarallax.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/5.0.0/imagesloaded.pkgd.min.js"></script>
-        
-        <!-- Bootstrap and Popper -->
-        <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
         
         <!-- Plugin Libraries -->
         <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
@@ -124,6 +166,154 @@
         <!-- Theme Scripts -->
         <script src="{{ asset('assets/js/common.min.js') }}"></script>
         <script src="{{ asset('assets/js/custom.js') }}"></script>
+        
+        <!-- Global Video Functions -->
+        <script>
+            // Global video interaction functions
+            window.likeVideo = function(videoId) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                return fetch(`/videos/${videoId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update any like count displays on the page
+                        document.querySelectorAll(`[data-video-id="${videoId}"] .likes-count`).forEach(element => {
+                            element.textContent = data.likes_count;
+                        });
+                        
+                        // Show success message
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Liked!',
+                                text: 'You liked this video',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                    return data;
+                })
+                .catch(error => {
+                    console.error('Error liking video:', error);
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to like video. Please try again.'
+                        });
+                    }
+                    return { success: false };
+                });
+            };
+            
+            window.shareVideo = function(videoId, videoTitle = 'Check out this boxing video!') {
+                const videoUrl = `${window.location.origin}/videos/${videoId}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: videoTitle,
+                        text: 'Watch this amazing boxing video',
+                        url: videoUrl
+                    }).catch(err => console.log('Error sharing:', err));
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(videoUrl).then(() => {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Link Copied!',
+                                text: 'Video link has been copied to clipboard',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            alert('Video link copied to clipboard!');
+                        }
+                    }).catch(() => {
+                        // Fallback: show the URL in a prompt
+                        prompt('Copy this link:', videoUrl);
+                    });
+                } else {
+                    // Final fallback: show the URL in a prompt
+                    prompt('Copy this link:', videoUrl);
+                }
+            };
+            
+            window.downloadVideo = function(videoId) {
+                window.open(`/videos/${videoId}/download`, '_blank');
+            };
+            
+            window.reportVideo = function(videoId) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Report Video',
+                        text: 'Please tell us why you are reporting this video:',
+                        input: 'select',
+                        inputOptions: {
+                            'inappropriate': 'Inappropriate content',
+                            'copyright': 'Copyright violation',
+                            'spam': 'Spam or misleading',
+                            'violence': 'Violence or dangerous content',
+                            'other': 'Other'
+                        },
+                        inputPlaceholder: 'Select a reason',
+                        showCancelButton: true,
+                        confirmButtonText: 'Report',
+                        cancelButtonText: 'Cancel',
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return 'Please select a reason for reporting';
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit report
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                            
+                            fetch(`/videos/${videoId}/report`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrfToken,
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    reason: result.value
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Reported!', 'Thank you for your report. We will review it shortly.', 'success');
+                                } else {
+                                    Swal.fire('Error!', data.message || 'Failed to submit report.', 'error');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error reporting video:', error);
+                                Swal.fire('Error!', 'Failed to submit report. Please try again.', 'error');
+                            });
+                        }
+                    });
+                } else {
+                    const reason = prompt('Please tell us why you are reporting this video:');
+                    if (reason) {
+                        // Submit basic report
+                        console.log('Report submitted for video:', videoId, 'Reason:', reason);
+                        alert('Thank you for your report. We will review it shortly.');
+                    }
+                }
+            };
+        </script>
         
         <!-- Initialize all sliders and components -->
         <script>

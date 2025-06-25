@@ -569,6 +569,25 @@ textarea {
     width: 55px;
     margin-right: 5px;
 }
+.gym-pagination ul.pagination li span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #303030;
+    font-family: var(--theme-found);
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    border-radius: 0 !important;
+    border: 1px solid #c1c1c1; 
+    width: 55px;
+    margin-right: 5px;
+}
+.gym-pagination ul.pagination li.active span {
+    background-color: var(--theme-color);
+    color: #fff;
+    border-color: var(--theme-color);
+}
 .gym-pagination ul.pagination li a:hover {
     color: #fff;
 }
@@ -1626,7 +1645,7 @@ span.counter {
 }
 /* 7. Featured Slider One End */
 
-/* 8. Client Slider One Start*/.
+/* 8. Client Slider One Start */
 .client-style-one .client-slider .owl-stage {
     display: flex !important;
     align-items: center !important;
@@ -1639,7 +1658,7 @@ span.counter {
     display: flex;
     align-items: center;
 }
-/* 8. Client Slider One End*/
+/* 8. Client Slider One End */
 
 /* 9. Core Features Start */ 
 .core-features .shape:after {
@@ -4369,7 +4388,7 @@ div#countdown ul li {
 }
 .banner-style-one .breadcrums ul li {
     display: inline-flex;
-    align-items: flex-end;
+    align-items: center;
 }
 .banner-style-one .breadcrums ul li:not(:last-child) {
     margin-right: 15px;
@@ -4381,7 +4400,7 @@ div#countdown ul li {
 }
 .banner-style-one .breadcrums ul li a {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
 }
 .banner-style-one .breadcrums ul li i {
     font-size: 20px;

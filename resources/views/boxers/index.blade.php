@@ -21,7 +21,7 @@
             <li>
               <a href="{{ route('home') }}">
                 <i class="fa-solid fa-house"></i>
-                <p>Home</p>
+               
               </a>
             </li>
             <li class="current">

@@ -5,12 +5,12 @@
 @section('content')
 <!-- Banner Style One Start -->
 <section class="banner-style-one">
-    <div class="parallax" style="background-image: url({{ asset('assets/images/bg-banner.jpg') }});"></div>
+    <div class="parallax" style="background-image: url({{ asset('assets/images/banner/news_oagebanner.jpg') }});"></div>
     <div class="container">
         <div class="row">
             <div class="banner-details">
-                <h2>Our Blog One</h2>
-                <p>our values and vaulted us to the top of our industry.</p>
+                <h2>Boxing News & Updates</h2>
+                <p>Stay updated with the latest boxing news, fight results, and exclusive content from Uganda's premier boxing promotion company.</p>
             </div>
         </div>
     </div>
@@ -21,11 +21,11 @@
                     <li>
                         <a href="{{ route('home') }}">
                             <i class="fa-solid fa-house"></i>
-                            <p>Home</p>
+                          
                         </a>
                     </li>
                     <li class="current">
-                        <p>Our Blog One</p>
+                        <p>Boxing News</p>
                     </li>
                 </ul>
             </div>
@@ -43,7 +43,7 @@
                 <div class="blog-post">
                     <div class="blog-image">
                         <figure>
-                            <img src="{{ $article->featured_image ? Storage::url($article->featured_image) : 'https://via.placeholder.com/469x269' }}" alt="{{ $article->title }}">
+                           <img src="{{ $article->featured_image ? Storage::url($article->featured_image) : 'https://via.placeholder. com/469x269' }}" alt="{{ $article->title }}">
                         </figure>
                         <a href="{{ route('news.show', $article->slug) }}">
                             <i class="fa-solid fa-angles-right"></i>
