@@ -48,10 +48,13 @@ class TicketCheckoutController extends Controller
             $tax = 0;
             $grandTotal = max(0, $total - $discount + $fee + $tax);
             $commission = $coupon ? $coupon->commissionFor($grandTotal) : 0.0;
-            $isFreeAccessGrant = $ticket->is_complimentary || $grandTotal <= 0;
+            $isExplicitlyFreeTicket = (bool) $ticket->is_complimentary || $unitPrice <= 0;
+            $isZeroByDiscount = $coupon !== null && $total > 0 && $grandTotal <= 0;
+            $isFreeAccessGrant = $isExplicitlyFreeTicket || $isZeroByDiscount;
             $paymentStatus = $isFreeAccessGrant ? 'completed' : 'pending';
 
             abort_if($gateway === 'iotec' && ! $isFreeAccessGrant && strtoupper((string) $currency) === 'UGX' && $grandTotal < 500, 422, 'Mobile money payments start from UGX 500. Please choose another pass or payment method.');
+            abort_if(! $isFreeAccessGrant && $grandTotal <= 0, 422, 'This ticket total is invalid for paid checkout. Please refresh and try again.');
 
             $purchase = TicketPurchase::create([
                 'event_ticket_id' => $ticket->id,
@@ -94,6 +97,7 @@ class TicketCheckoutController extends Controller
                 'metadata' => [
                     'checkout_source' => 'api',
                     'coupon_code' => $coupon?->code,
+                    'free_reason' => $isFreeAccessGrant ? ($isExplicitlyFreeTicket ? 'ticket_marked_free' : 'coupon_discounted_to_zero') : null,
                 ],
             ]);
 
@@ -118,6 +122,7 @@ class TicketCheckoutController extends Controller
                     'discount_amount' => $discount,
                     'affiliate_commission_amount' => $commission,
                     'frontend_url' => $frontendUrl,
+                    'free_reason' => $isFreeAccessGrant ? ($isExplicitlyFreeTicket ? 'ticket_marked_free' : 'coupon_discounted_to_zero') : null,
                 ],
             ]);
 
